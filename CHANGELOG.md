@@ -1,3 +1,11 @@
+## [1.0.2](https://github.com/webeach/collection/compare/v1.0.1...v1.0.2) (2025-04-27)
+
+
+### Bug Fixes
+
+* fix semantic-release config ([9ce9fc5](https://github.com/webeach/collection/commit/9ce9fc52a7f50df12d1ecd655c2ee73a9eaea644))
+* fix semantic-release config ([55d6fdb](https://github.com/webeach/collection/commit/55d6fdbd5b65c26022083c5e70ef660599175787))
+
 ## [1.0.1](https://github.com/webeach/collection/compare/v1.0.0...v1.0.1) (2025-04-27)
 
 
