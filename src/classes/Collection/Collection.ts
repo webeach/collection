@@ -34,7 +34,7 @@ export class Collection<
    * This function is triggered after successful operations like adding, removing, patching, or resetting items.
    * To unsubscribe, set this property to `null`.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/properties/onUpdate.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/properties/onUpdate.md
    */
   public onUpdate: CollectionUpdateEventHandler<
     CollectionPrimaryKeyWithDefault<PrimaryKey>,
@@ -48,10 +48,10 @@ export class Collection<
    * It allows registering custom logic for operations like insert, remove, patch, and clear.
    * Useful for intercepting or extending collection behavior.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/hooks/clear.md
-   * @see https://github.com/webeach/collection/docs/en/Collection/hooks/insert.md
-   * @see https://github.com/webeach/collection/docs/en/Collection/hooks/patch.md
-   * @see https://github.com/webeach/collection/docs/en/Collection/hooks/remove.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/hooks/clear.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/hooks/insert.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/hooks/patch.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/hooks/remove.md
    */
   public [$CollectionHookDispatcherSymbol] = new HookDispatcher<
     CollectionHookOperationType,
@@ -105,7 +105,7 @@ export class Collection<
    * - `initialItems` — An array of initial items to populate the collection (optional).
    * - `primaryKey` — The name of the field to be used as the primary key (optional, defaults to `'key'`).
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/constructor.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/constructor.md
    */
   constructor(
     options: CollectionOptions<
@@ -138,7 +138,7 @@ export class Collection<
    * @param item - The item to add to the collection.
    * @returns `true` if the item was successfully added; otherwise `false`.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/appendItem.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/appendItem.md
    */
   public appendItem(
     item: CollectionItem<
@@ -166,7 +166,7 @@ export class Collection<
    * @param index - The position in the collection where the item should be inserted.
    * @returns `true` if the item was successfully added; otherwise `false`.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/appendItemAt.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/appendItemAt.md
    */
   public appendItemAt(
     item: CollectionItem<
@@ -193,7 +193,7 @@ export class Collection<
    *
    * @returns `true` if the collection was successfully cleared; otherwise `false`.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/clear.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/clear.md
    */
   public clear() {
     if (!this._clear()) {
@@ -216,7 +216,7 @@ export class Collection<
    * - `index` — the index of the current item.
    * - `currentItems` — a read-only array containing a copy of all items at the start of iteration.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/forEach.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/forEach.md
    */
   public forEach(
     callback: (
@@ -246,7 +246,7 @@ export class Collection<
    * @param key - The primary key of the item to retrieve.
    * @returns The item if found; otherwise `null`.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/getItem.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/getItem.md
    */
   public getItem(key: PrimaryKeyType) {
     return this.itemsByMap.get(key) || null;
@@ -258,7 +258,7 @@ export class Collection<
    * @param key - The primary key of the item to check.
    * @returns `true` if the item exists; otherwise `false`.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/hasItem.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/hasItem.md
    */
   public hasItem(key: PrimaryKeyType) {
     return this.itemsByMap.has(key);
@@ -274,7 +274,7 @@ export class Collection<
    * @param item - The item to insert into the collection.
    * @returns `true` if the item was successfully inserted; otherwise `false`.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/insertItemAfter.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/insertItemAfter.md
    */
   public insertItemAfter(
     key: PrimaryKeyType,
@@ -303,7 +303,7 @@ export class Collection<
    * @param item - The item to insert into the collection.
    * @returns `true` if the item was successfully inserted; otherwise `false`.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/insertItemBefore.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/insertItemBefore.md
    */
   public insertItemBefore(
     key: PrimaryKeyType,
@@ -333,7 +333,7 @@ export class Collection<
    * @param patchData - A partial object containing the fields to update.
    * @returns `true` if the item was successfully updated; otherwise `false`.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/patchItem.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/patchItem.md
    */
   public patchItem(
     key: PrimaryKeyType,
@@ -359,7 +359,7 @@ export class Collection<
    * @param item - The item to add to the collection.
    * @returns `true` if the item was successfully added; otherwise `false`.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/prependItem.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/prependItem.md
    */
   public prependItem(
     item: CollectionItem<
@@ -385,7 +385,7 @@ export class Collection<
    * @param key - The primary key of the item to remove.
    * @returns `true` if the item was successfully removed; otherwise `false`.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/removeItem.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/removeItem.md
    */
   public removeItem(key: PrimaryKeyType) {
     if (!this._removeItem(key)) {
@@ -407,7 +407,7 @@ export class Collection<
    * @param item - The new item to insert into the collection.
    * @returns `true` if the operation was successful; otherwise `false`.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/replaceItem.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/replaceItem.md
    */
   public replaceItem(
     key: PrimaryKeyType,
@@ -434,7 +434,7 @@ export class Collection<
    *
    * @returns `true` if the collection was successfully reset; otherwise `false`.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/reset.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/reset.md
    */
   public reset() {
     if (!this._reset()) {
@@ -455,7 +455,7 @@ export class Collection<
    * @param items - An array of new items to set in the collection.
    * @returns `true` if the items were successfully set; otherwise `false`.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/setItems.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/setItems.md
    */
   public setItems(
     items: CollectionItem<
@@ -480,7 +480,7 @@ export class Collection<
    *
    * @returns The number of items in the collection.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/properties/numItems.md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/properties/numItems.md
    */
   public get numItems() {
     return this.items.length;
@@ -494,7 +494,7 @@ export class Collection<
    *
    * @returns An iterator over the collection items.
    *
-   * @see https://github.com/webeach/collection/docs/en/Collection/methods/[Symbol.iterator].md
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/[Symbol.iterator].md
    */
   public [Symbol.iterator]() {
     return this.items.slice()[Symbol.iterator]();
