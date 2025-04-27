@@ -5,6 +5,9 @@
     <a href="https://www.npmjs.com/package/@webeach/collection">
        <img src="https://img.shields.io/npm/v/@webeach/collection.svg?color=104F85&labelColor=1E7EBA" alt="npm package" />
     </a>
+    <a href="https://www.npmjs.com/package/@webeach/collection">
+      <img src="https://img.shields.io/bundlephobia/minzip/@webeach/collection?label=size&color=104F85&labelColor=1E7EBA" alt="Bundle size" />
+    </a>
     <a href="https://github.com/webeach/collection/actions/workflows/ci.yml">
       <img src="https://img.shields.io/github/actions/workflow/status/molefrog/wouter/size.yml?color=104F85&labelColor=1E7EBA" alt="build" />
     </a>
@@ -12,7 +15,7 @@
       <img src="https://img.shields.io/npm/dm/@webeach/collection.svg?color=104F85&labelColor=1E7EBA" alt="npm downloads" />
     </a>
   </p>
-  <p><a href="./README.md">🇺🇸 English version</a> | <a href="./README.md">🇷🇺 Русская версия</a></p>
+  <p><a href="./README.md">🇺🇸 English version</a> | <a href="./README.ru.md">🇷🇺 Русская версия</a></p>
   <p>Управляемая коллекция элементов с поддержкой хуков, событий и строгой типизацией.</p>
 </div>
 

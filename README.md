@@ -15,7 +15,7 @@
       <img src="https://img.shields.io/npm/dm/@webeach/collection.svg?color=104F85&labelColor=1E7EBA" alt="npm downloads" />
     </a>
   </p>
-  <p><a href="./README.md">🇺🇸 English version</a> | <a href="./README.md">🇷🇺 Русская версия</a></p>
+  <p><a href="./README.md">🇺🇸 English version</a> | <a href="./README.ru.md">🇷🇺 Русская версия</a></p>
   <p>Managed collection of items with hooks, events, and strict type safety.</p>
 </div>
 
