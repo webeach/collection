@@ -137,5 +137,5 @@ jobs:
       - name: Release
         run: pnpm release
         env:
-          GITHUB_TOKEN: ${{ secrets.WEBEACH_GITHUB_RELEASE_TOKEN }}
+          GH_TOKEN: ${{ secrets.WEBEACH_GITHUB_RELEASE_TOKEN }}
           NPM_TOKEN: ${{ secrets.WEBEACH_NPM_PUBLISH_TOKEN }}
