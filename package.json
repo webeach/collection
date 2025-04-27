@@ -1,0 +1,107 @@
+{
+  "name": "@webeach/collection",
+  "version": "1.0.0",
+  "author": {
+    "name": "Ruslan Martynov",
+    "email": "github@webea.ch"
+  },
+  "description": "Managed collection of items with hooks, events, and strict type safety",
+  "keywords": [
+    "collection",
+    "typed-collection",
+    "list",
+    "typed-list",
+    "dataset",
+    "typescript",
+    "event-driven",
+    "evented",
+    "hookable",
+    "library",
+    "webeach"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webeach/collection"
+  },
+  "bugs": {
+    "url": "https://github.com/webeach/collection/issues"
+  },
+  "homepage": "https://github.com/webeach/collection#readme",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "engines": {
+    "node": "22.2.0"
+  },
+  "type": "module",
+  "main": "./lib/cjs/index.cjs",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/cjs/index.d.cts",
+  "browser": "./lib/browser/index.js",
+  "unpkg": "./lib/browser/index.js",
+  "exports": {
+    ".": {
+      "types": "./lib/cjs/index.d.cts",
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.cjs"
+    }
+  },
+  "files": [
+    "docs",
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "lint:types": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "size": "size-limit",
+    "release": "semantic-release",
+    "prepare": "is-ci || husky"
+  },
+  "lint-staged": {
+    "**/*.{cjs,js,jsx,mjs,mts,ts,tsx}": [
+      "pnpm run lint"
+    ]
+  },
+  "size-limit": [
+    {
+      "path": "./lib/browser/index.js",
+      "limit": "1.5 KB"
+    }
+  ],
+  "devDependencies": {
+    "@commitlint/cli": "^19.6.0",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@eslint/js": "^9.12.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^12.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.1",
+    "@size-limit/file": "^11.2.0",
+    "@types/node": "^22.7.6",
+    "eslint": "^9.12.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "globals": "^15.11.0",
+    "husky": "^9.1.6",
+    "is-ci": "^3.0.1",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "semantic-release": "^24.2.0",
+    "size-limit": "^11.2.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.10.0",
+    "vitest": "^3.1.1"
+  }
+}

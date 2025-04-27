@@ -1,0 +1,1 @@
+export { CollectionUpdateEvent } from './CollectionUpdateEvent';
