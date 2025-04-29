@@ -33,7 +33,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "engines": {
-    "node": "22.2.0"
+    "node": "22.15.0"
   },
   "type": "module",
   "main": "./lib/cjs/index.cjs",
