@@ -61,6 +61,12 @@ export class HookDispatcher<
       handlerList.unshift(handler);
     }
 
+    /**
+     * Unregisters the handler from the list of listeners for the given operation.
+     * If the handler was previously registered, it will be removed from the handler list.
+     *
+     * @returns void
+     */
     const unregister = () => {
       const index = handlerList.indexOf(handler);
 
