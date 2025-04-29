@@ -1,1 +1,3 @@
-export const $CollectionHookDispatcherSymbol = Symbol();
+export const $CollectionHookDispatcherSymbol = Symbol(
+  'CollectionHookDispatcher',
+);
