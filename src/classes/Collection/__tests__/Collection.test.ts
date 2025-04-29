@@ -1778,9 +1778,11 @@ describe('Collection hooks - insert operations', () => {
     collection.appendItem({ id: 'a', value: 123 });
 
     expect(updateListener).toHaveBeenCalledOnce();
-    expect(updateListener.mock.lastCall![0].detail).toEqual([
-      { id: 'a', value: 123 },
-    ]);
+    expect(updateListener).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        detail: [{ id: 'a', value: 123 }],
+      }),
+    );
   });
 
   it('appendItem should NOT trigger update event if insert:before returns false', () => {
