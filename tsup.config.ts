@@ -1,12 +1,12 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from "tsup";
 
 export default defineConfig([
   // ESM build
   {
-    entry: ['src/index.ts'],
-    format: 'esm',
-    outDir: 'lib/esm',
-    target: 'es2022',
+    entry: ["src/index.ts"],
+    format: "esm",
+    outDir: "lib/esm",
+    target: "es2022",
     sourcemap: true,
     minify: false,
     dts: false,
@@ -14,10 +14,10 @@ export default defineConfig([
   },
   // CJS build
   {
-    entry: ['src/index.ts'],
-    format: 'cjs',
-    outDir: 'lib/cjs',
-    target: 'es2022',
+    entry: ["src/index.ts"],
+    format: "cjs",
+    outDir: "lib/cjs",
+    target: "es2022",
     sourcemap: true,
     minify: false,
     dts: true,
@@ -25,17 +25,17 @@ export default defineConfig([
   },
   // Browser build (minified)
   {
-    entry: ['src/index.ts'],
-    format: 'esm',
-    outDir: 'lib/browser',
-    target: 'es2018',
+    entry: ["src/index.ts"],
+    format: "esm",
+    outDir: "lib/browser",
+    target: "es2018",
     sourcemap: true,
     minify: true,
     dts: false,
     clean: false,
     define: {
-      'process.env.NODE_ENV': '"production"',
-      process: 'undefined',
+      "process.env.NODE_ENV": '"production"',
+      process: "undefined",
     },
   },
 ]);

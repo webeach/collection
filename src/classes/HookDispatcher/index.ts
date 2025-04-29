@@ -1,1 +1,1 @@
-export { HookDispatcher } from './HookDispatcher';
+export { HookDispatcher } from "./HookDispatcher";

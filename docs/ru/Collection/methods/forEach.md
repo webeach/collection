@@ -6,6 +6,7 @@
 Элементы передаются в колбэк в порядке их нахождения в коллекции.
 
 > ℹ️ **Особенности:**
+>
 > - Итерация происходит по копии массива элементов, чтобы избежать проблем при изменении коллекции внутри колбэка.
 > - Коллекция остаётся неизменной в процессе обхода.
 
@@ -39,8 +40,8 @@ collectionInstance.forEach((item, index, items) => { ... }): void;
 ```ts
 const collection = new Collection({
   initialItems: [
-    { key: 'user1', name: 'John Doe' },
-    { key: 'user2', name: 'Alice' },
+    { key: "user1", name: "John Doe" },
+    { key: "user2", name: "Alice" },
   ],
 });
 
@@ -60,8 +61,8 @@ collection.forEach((item, index) => {
 ```ts
 const collection = new Collection();
 
-collection.appendItem({ key: 'user1', name: 'John Doe' });
-collection.appendItem({ key: 'user2', name: 'Alice' });
+collection.appendItem({ key: "user1", name: "John Doe" });
+collection.appendItem({ key: "user2", name: "Alice" });
 
 collection.forEach((item) => {
   console.log(item.name);

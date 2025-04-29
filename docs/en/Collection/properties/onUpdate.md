@@ -35,7 +35,7 @@ collection.onUpdate = (event) => {
 
 ```ts
 collection.onUpdate = (event) => {
-  console.log('Collection updated. Number of items:', event.detail.length);
+  console.log("Collection updated. Number of items:", event.detail.length);
 };
 ```
 
@@ -46,7 +46,7 @@ collection.onUpdate = (event) => {
 ```ts
 collection.onUpdate = (event) => {
   for (const item of event.detail) {
-    console.log('Item in collection:', item);
+    console.log("Item in collection:", item);
   }
 };
 ```
@@ -58,6 +58,6 @@ collection.onUpdate = (event) => {
 ```ts
 collection.onUpdate = (event) => {
   event.stopImmediatePropagation();
-  console.log('Update handled only here');
+  console.log("Update handled only here");
 };
 ```

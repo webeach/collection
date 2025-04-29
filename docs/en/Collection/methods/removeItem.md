@@ -22,10 +22,12 @@ collectionInstance.removeItem(key): boolean;
 
 1. The item is searched by the provided primary key.
 2. If the item is found:
-  - The `remove:before` hook is called.
-  - The item is removed from the collection and the internal index.
-  - The `remove:after` hook is called.
-  - The `update` event is triggered.
+
+- The `remove:before` hook is called.
+- The item is removed from the collection and the internal index.
+- The `remove:after` hook is called.
+- The `update` event is triggered.
+
 3. If the item is not found, the method returns `false` without calling any hooks or events.
 
 ---
@@ -37,12 +39,12 @@ collectionInstance.removeItem(key): boolean;
 ```ts
 const collection = new Collection({
   initialItems: [
-    { key: 'user1', name: 'John Doe' },
-    { key: 'user2', name: 'Alice' },
+    { key: "user1", name: "John Doe" },
+    { key: "user2", name: "Alice" },
   ],
 });
 
-const removed = collection.removeItem('user1');
+const removed = collection.removeItem("user1");
 
 console.log(removed); // true
 console.log(Array.from(collection));
@@ -55,12 +57,10 @@ console.log(Array.from(collection));
 
 ```ts
 const collection = new Collection({
-  initialItems: [
-    { key: 'user1', name: 'John Doe' },
-  ],
+  initialItems: [{ key: "user1", name: "John Doe" }],
 });
 
-const removed = collection.removeItem('user2');
+const removed = collection.removeItem("user2");
 
 console.log(removed); // false
 console.log(Array.from(collection));
@@ -73,10 +73,10 @@ console.log(Array.from(collection));
 
 ```ts
 const collection = new Collection({
-  primaryKey: 'id',
+  primaryKey: "id",
   initialItems: [
-    { id: 1, name: 'Alice' },
-    { id: 2, name: 'Bob' },
+    { id: 1, name: "Alice" },
+    { id: 2, name: "Bob" },
   ],
 });
 

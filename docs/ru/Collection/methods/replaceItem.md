@@ -43,14 +43,14 @@ collectionInstance.replaceItem(key, item): boolean;
 ```ts
 const collection = new Collection({
   initialItems: [
-    { key: 'user1', name: 'John Doe' },
-    { key: 'user2', name: 'Alice' },
+    { key: "user1", name: "John Doe" },
+    { key: "user2", name: "Alice" },
   ],
 });
 
-collection.replaceItem('user1', { key: 'user1', name: 'Jane Smith' });
+collection.replaceItem("user1", { key: "user1", name: "Jane Smith" });
 
-console.log(collection.getItem('user1'));
+console.log(collection.getItem("user1"));
 // { key: 'user1', name: 'Jane Smith' }
 ```
 
@@ -61,9 +61,9 @@ console.log(collection.getItem('user1'));
 ```ts
 const collection = new Collection();
 
-collection.replaceItem('user3', { key: 'user3', name: 'Charlie' });
+collection.replaceItem("user3", { key: "user3", name: "Charlie" });
 
-console.log(collection.getItem('user3'));
+console.log(collection.getItem("user3"));
 // { key: 'user3', name: 'Charlie' }
 ```
 
@@ -73,14 +73,14 @@ console.log(collection.getItem('user3'));
 
 ```ts
 const collection = new Collection({
-  primaryKey: 'id',
+  primaryKey: "id",
   initialItems: [
-    { id: 1, name: 'Alice' },
-    { id: 2, name: 'Bob' },
+    { id: 1, name: "Alice" },
+    { id: 2, name: "Bob" },
   ],
 });
 
-collection.replaceItem(1, { id: 1, name: 'Alicia' });
+collection.replaceItem(1, { id: 1, name: "Alicia" });
 
 console.log(collection.getItem(1));
 // { id: 1, name: 'Alicia' }

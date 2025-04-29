@@ -6,6 +6,7 @@ The `forEach` method allows you to iterate over all items in the collection and 
 Items are passed to the callback in the order they appear in the collection.
 
 > ℹ️ **Details:**
+>
 > - Iteration is performed on a **copy** of the collection's items to avoid issues if the collection is modified inside the callback.
 > - The original collection remains unchanged during the iteration.
 
@@ -39,8 +40,8 @@ collectionInstance.forEach((item, index, items) => { ... }): void;
 ```ts
 const collection = new Collection({
   initialItems: [
-    { key: 'user1', name: 'John Doe' },
-    { key: 'user2', name: 'Alice' },
+    { key: "user1", name: "John Doe" },
+    { key: "user2", name: "Alice" },
   ],
 });
 
@@ -60,8 +61,8 @@ collection.forEach((item, index) => {
 ```ts
 const collection = new Collection();
 
-collection.appendItem({ key: 'user1', name: 'John Doe' });
-collection.appendItem({ key: 'user2', name: 'Alice' });
+collection.appendItem({ key: "user1", name: "John Doe" });
+collection.appendItem({ key: "user2", name: "Alice" });
 
 collection.forEach((item) => {
   console.log(item.name);

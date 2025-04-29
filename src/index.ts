@@ -1,2 +1,2 @@
-export * from './classes/Collection';
-export * from './classes/CollectionUpdateEvent';
+export * from "./classes/Collection";
+export * from "./classes/CollectionUpdateEvent";

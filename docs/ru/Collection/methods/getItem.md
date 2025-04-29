@@ -6,6 +6,7 @@
 Если элемент с указанным ключом существует, возвращается его объект. Если элемента нет — возвращается `null`.
 
 > ℹ️ **Особенности:**
+>
 > - Поиск элемента происходит через внутренний `Map`, что обеспечивает быструю (O(1)) скорость доступа.
 
 ---
@@ -36,12 +37,12 @@ collectionInstance.getItem(key): Item | null;
 ```ts
 const collection = new Collection({
   initialItems: [
-    { key: 'user1', name: 'John Doe' },
-    { key: 'user2', name: 'Alice' },
+    { key: "user1", name: "John Doe" },
+    { key: "user2", name: "Alice" },
   ],
 });
 
-const user = collection.getItem('user1');
+const user = collection.getItem("user1");
 
 console.log(user);
 // { key: 'user1', name: 'John Doe' }
@@ -53,12 +54,10 @@ console.log(user);
 
 ```ts
 const collection = new Collection({
-  initialItems: [
-    { key: 'user1', name: 'John Doe' },
-  ],
+  initialItems: [{ key: "user1", name: "John Doe" }],
 });
 
-const user = collection.getItem('nonexistent');
+const user = collection.getItem("nonexistent");
 
 console.log(user); // null
 ```
@@ -69,10 +68,10 @@ console.log(user); // null
 
 ```ts
 const collection = new Collection({
-  primaryKey: 'id',
+  primaryKey: "id",
   initialItems: [
-    { id: 101, name: 'John Doe' },
-    { id: 102, name: 'Alice' },
+    { id: 101, name: "John Doe" },
+    { id: 102, name: "Alice" },
   ],
 });
 

@@ -26,11 +26,13 @@ collectionInstance.patchItem(key, patchData): boolean;
 
 1. The item is searched by the provided primary key.
 2. If the item is found:
-  - The `patch:before` hook is called.
-  - The existing item data is merged with the `patchData`.
-  - The primary key is forcibly preserved without changes.
-  - The `patch:after` hook is called.
-  - The `update` event is triggered.
+
+- The `patch:before` hook is called.
+- The existing item data is merged with the `patchData`.
+- The primary key is forcibly preserved without changes.
+- The `patch:after` hook is called.
+- The `update` event is triggered.
+
 3. If the item is not found, `false` is returned.
 
 ---
@@ -41,14 +43,12 @@ collectionInstance.patchItem(key, patchData): boolean;
 
 ```ts
 const collection = new Collection({
-  initialItems: [
-    { key: 'user1', name: 'John Doe', age: 30 },
-  ],
+  initialItems: [{ key: "user1", name: "John Doe", age: 30 }],
 });
 
-collection.patchItem('user1', { age: 31 });
+collection.patchItem("user1", { age: 31 });
 
-console.log(collection.getItem('user1'));
+console.log(collection.getItem("user1"));
 // { key: 'user1', name: 'John Doe', age: 31 }
 ```
 
@@ -58,14 +58,12 @@ console.log(collection.getItem('user1'));
 
 ```ts
 const collection = new Collection({
-  initialItems: [
-    { key: 'user1', name: 'John Doe' },
-  ],
+  initialItems: [{ key: "user1", name: "John Doe" }],
 });
 
-collection.patchItem('user1', { key: 'newKey' } as any);
+collection.patchItem("user1", { key: "newKey" } as any);
 
-console.log(collection.getItem('user1'));
+console.log(collection.getItem("user1"));
 // { key: 'user1', name: 'John Doe' }
 ```
 
@@ -75,10 +73,8 @@ console.log(collection.getItem('user1'));
 
 ```ts
 const collection = new Collection({
-  primaryKey: 'id',
-  initialItems: [
-    { id: 1, name: 'Alice', age: 25 },
-  ],
+  primaryKey: "id",
+  initialItems: [{ id: 1, name: "Alice", age: 25 }],
 });
 
 collection.patchItem(1, { age: 26 });

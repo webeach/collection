@@ -43,11 +43,14 @@ hook({
 ### Blocking insertion under certain conditions
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('insert:before', ({ item }) => {
-  if (item.type === 'forbidden') {
-    return false; // Block insertion of forbidden type
-  }
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "insert:before",
+  ({ item }) => {
+    if (item.type === "forbidden") {
+      return false; // Block insertion of forbidden type
+    }
+  },
+);
 ```
 
 ---
@@ -55,9 +58,12 @@ collection[$CollectionHookDispatcherSymbol].register('insert:before', ({ item })
 ### Modifying an item before insertion
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('insert:before', ({ item }) => {
-  item.createdAt = new Date();
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "insert:before",
+  ({ item }) => {
+    item.createdAt = new Date();
+  },
+);
 ```
 
 ---
@@ -65,7 +71,12 @@ collection[$CollectionHookDispatcherSymbol].register('insert:before', ({ item })
 ### Reacting to a successful insertion
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('insert:after', ({ item, index, meta }) => {
-  console.log(`Item with key ${item[meta.primaryKey]} successfully inserted at position ${index}`);
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "insert:after",
+  ({ item, index, meta }) => {
+    console.log(
+      `Item with key ${item[meta.primaryKey]} successfully inserted at position ${index}`,
+    );
+  },
+);
 ```

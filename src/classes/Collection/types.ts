@@ -1,5 +1,5 @@
-import { BaseObject } from '../../types/common';
-import { CollectionUpdateEvent } from '../CollectionUpdateEvent';
+import { BaseObject } from "../../types/common";
+import { CollectionUpdateEvent } from "../CollectionUpdateEvent";
 
 /**
  * Represents the minimal structure of an item in the collection,
@@ -7,7 +7,7 @@ import { CollectionUpdateEvent } from '../CollectionUpdateEvent';
  *
  * @typeParam PrimaryKey - The field name used as the primary key (defaults to `'key'`).
  */
-export type CollectionBaseItemData<PrimaryKey extends string = 'key'> = {
+export type CollectionBaseItemData<PrimaryKey extends string = "key"> = {
   [K in PrimaryKey]: CollectionBaseKeyType;
 } & BaseObject;
 
@@ -25,7 +25,7 @@ export type CollectionBaseKeyType = string | number | bigint;
  * @typeParam ItemData - The shape of the item data.
  */
 export type CollectionHookParams<
-  PrimaryKey extends string = 'key',
+  PrimaryKey extends string = "key",
   PrimaryKeyType extends CollectionBaseKeyType = CollectionBaseKeyType,
   ItemData extends BaseObject = BaseObject,
 > = [
@@ -42,7 +42,7 @@ export type CollectionHookParams<
  * @typeParam PrimaryKey - The primary key field name.
  */
 export type CollectionHookParamsOperationClear<
-  PrimaryKey extends string = 'key',
+  PrimaryKey extends string = "key",
 > = [
   {
     meta: CollectionHookParamsMeta<PrimaryKey>;
@@ -60,7 +60,7 @@ export type CollectionHookParamsOperationClear<
  * @typeParam ItemData - The shape of the item data.
  */
 export type CollectionHookParamsMap<
-  PrimaryKey extends string = 'key',
+  PrimaryKey extends string = "key",
   PrimaryKeyType extends CollectionBaseKeyType = CollectionBaseKeyType,
   ItemData extends BaseObject = BaseObject,
 > = {
@@ -74,7 +74,7 @@ export type CollectionHookParamsMap<
  *
  * @typeParam PrimaryKey - The primary key field name.
  */
-export type CollectionHookParamsMeta<PrimaryKey extends string = 'key'> = {
+export type CollectionHookParamsMeta<PrimaryKey extends string = "key"> = {
   readonly primaryKey: PrimaryKey;
 };
 
@@ -82,15 +82,15 @@ export type CollectionHookParamsMeta<PrimaryKey extends string = 'key'> = {
  * Defines all possible collection operation actions.
  */
 export type CollectionHookOperationAction =
-  | 'clear'
-  | 'insert'
-  | 'patch'
-  | 'remove';
+  | "clear"
+  | "insert"
+  | "patch"
+  | "remove";
 
 /**
  * Defines the possible stages of a collection operation.
  */
-export type CollectionHookOperationStage = 'after' | 'before';
+export type CollectionHookOperationStage = "after" | "before";
 
 /**
  * Represents the full operation type as a combination of action and stage.
@@ -107,7 +107,7 @@ export type CollectionHookOperationType =
  * @typeParam ItemData - The shape of the item data excluding the primary key.
  */
 export type CollectionItem<
-  PrimaryKey extends string = 'key',
+  PrimaryKey extends string = "key",
   PrimaryKeyType extends CollectionBaseKeyType = CollectionBaseKeyType,
   ItemData extends BaseObject = BaseObject,
 > = Omit<ItemData, PrimaryKey> & {
@@ -122,7 +122,7 @@ export type CollectionItem<
  * @typeParam ItemData - The shape of the item data.
  */
 export type CollectionOptions<
-  PrimaryKey extends string = 'key',
+  PrimaryKey extends string = "key",
   PrimaryKeyType extends CollectionBaseKeyType = CollectionBaseKeyType,
   ItemData extends
     CollectionBaseItemData<PrimaryKey> = CollectionBaseItemData<PrimaryKey>,
@@ -141,7 +141,7 @@ export type CollectionOptions<
  * @typeParam PrimaryKey - The field name to use as primary key, or `never`.
  */
 export type CollectionPrimaryKeyWithDefault<PrimaryKey extends string> =
-  PrimaryKey extends never ? 'key' : PrimaryKey;
+  PrimaryKey extends never ? "key" : PrimaryKey;
 
 /**
  * Event handler type for handling `CollectionUpdateEvent` events.
@@ -151,7 +151,7 @@ export type CollectionPrimaryKeyWithDefault<PrimaryKey extends string> =
  * @typeParam ItemData - The shape of the item data.
  */
 export type CollectionUpdateEventHandler<
-  PrimaryKey extends string = 'key',
+  PrimaryKey extends string = "key",
   PrimaryKeyType extends CollectionBaseKeyType = CollectionBaseKeyType,
   ItemData extends
     CollectionBaseItemData<PrimaryKey> = CollectionBaseItemData<PrimaryKey>,

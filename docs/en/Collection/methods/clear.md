@@ -23,7 +23,9 @@ collectionInstance.clear(): boolean;
 
 1. If the collection is already empty, the method returns `false` and does nothing.
 2. Before removing all items, the `clear:before` hook is called.
-  - If the hook cancels the operation, clearing is aborted, and the method returns `false`.
+
+- If the hook cancels the operation, clearing is aborted, and the method returns `false`.
+
 3. All items and internal indexes are cleared.
 4. After clearing, the `clear:after` hook is called.
 5. The `update` event is triggered.
@@ -38,8 +40,8 @@ collectionInstance.clear(): boolean;
 ```ts
 const collection = new Collection({
   initialItems: [
-    { key: 'user1', name: 'John Doe' },
-    { key: 'user2', name: 'Alice' },
+    { key: "user1", name: "John Doe" },
+    { key: "user2", name: "Alice" },
   ],
 });
 
@@ -59,11 +61,11 @@ console.log(Array.from(collection)); // []
 ```ts
 const collection = new Collection();
 
-collection.appendItem({ key: 'user1', name: 'John Doe' });
+collection.appendItem({ key: "user1", name: "John Doe" });
 collection.clear();
-collection.appendItem({ key: 'user2', name: 'Alice' });
+collection.appendItem({ key: "user2", name: "Alice" });
 
 console.log(collection.numItems); // 1
-console.log(collection.getItem('user2'));
+console.log(collection.getItem("user2"));
 // { key: 'user2', name: 'Alice' }
 ```

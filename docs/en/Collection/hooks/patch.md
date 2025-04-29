@@ -43,11 +43,14 @@ hook({
 ### Blocking updates under certain conditions
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('patch:before', ({ item }) => {
-  if (item.readonly) {
-    return false; // Prevent changes to protected items
-  }
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "patch:before",
+  ({ item }) => {
+    if (item.readonly) {
+      return false; // Prevent changes to protected items
+    }
+  },
+);
 ```
 
 ---
@@ -55,9 +58,14 @@ collection[$CollectionHookDispatcherSymbol].register('patch:before', ({ item }) 
 ### Logging successful updates
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('patch:after', ({ item, index, meta }) => {
-  console.log(`Item with key ${item[meta.primaryKey]} updated at position ${index}`);
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "patch:after",
+  ({ item, index, meta }) => {
+    console.log(
+      `Item with key ${item[meta.primaryKey]} updated at position ${index}`,
+    );
+  },
+);
 ```
 
 ---
@@ -65,7 +73,10 @@ collection[$CollectionHookDispatcherSymbol].register('patch:after', ({ item, ind
 ### Mutating an item after patching
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('patch:after', ({ item }) => {
-  item.updatedAt = new Date(); // Add updated timestamp
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "patch:after",
+  ({ item }) => {
+    item.updatedAt = new Date(); // Add updated timestamp
+  },
+);
 ```

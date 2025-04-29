@@ -7,6 +7,7 @@ If the target item is not found, the new item is appended to the end of the coll
 After insertion, an `update` event will be triggered.
 
 > ℹ️ **Details:**
+>
 > - If the target item exists, the new item is inserted directly after it.
 > - If the target item is not found, the behavior is equivalent to `appendItem`.
 
@@ -29,9 +30,13 @@ collectionInstance.insertItemAfter(key, item): boolean;
 1. The target item is searched by the provided key.
 2. The `insert:before` hook is called.
 3. If the target item is found:
-  - The new item is inserted immediately after it.
+
+- The new item is inserted immediately after it.
+
 4. If the target item is not found:
-  - The new item is appended to the end of the collection (like `appendItem`).
+
+- The new item is appended to the end of the collection (like `appendItem`).
+
 5. The `insert:after` hook is called.
 6. The `update` event is triggered.
 
@@ -44,12 +49,12 @@ collectionInstance.insertItemAfter(key, item): boolean;
 ```ts
 const collection = new Collection({
   initialItems: [
-    { key: 'user1', name: 'John Doe' },
-    { key: 'user2', name: 'Alice' },
+    { key: "user1", name: "John Doe" },
+    { key: "user2", name: "Alice" },
   ],
 });
 
-collection.insertItemAfter('user1', { key: 'user3', name: 'Bob' });
+collection.insertItemAfter("user1", { key: "user3", name: "Bob" });
 
 console.log(Array.from(collection));
 // [
@@ -65,12 +70,10 @@ console.log(Array.from(collection));
 
 ```ts
 const collection = new Collection({
-  initialItems: [
-    { key: 'user1', name: 'John Doe' },
-  ],
+  initialItems: [{ key: "user1", name: "John Doe" }],
 });
 
-collection.insertItemAfter('nonexistent', { key: 'user2', name: 'Alice' });
+collection.insertItemAfter("nonexistent", { key: "user2", name: "Alice" });
 
 console.log(Array.from(collection));
 // [
@@ -85,13 +88,11 @@ console.log(Array.from(collection));
 
 ```ts
 const collection = new Collection({
-  primaryKey: 'id',
-  initialItems: [
-    { id: 1, name: 'John Doe' },
-  ],
+  primaryKey: "id",
+  initialItems: [{ id: 1, name: "John Doe" }],
 });
 
-collection.insertItemAfter(1, { id: 2, name: 'Alice' });
+collection.insertItemAfter(1, { id: 2, name: "Alice" });
 
 console.log(Array.from(collection));
 // [

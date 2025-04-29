@@ -38,8 +38,8 @@ collectionInstance.appendItemAt(item, index): boolean;
 ```ts
 const collection = new Collection();
 
-collection.appendItem({ key: 'user2', name: 'Alice' });
-collection.appendItemAt({ key: 'user1', name: 'John Doe' }, 0);
+collection.appendItem({ key: "user2", name: "Alice" });
+collection.appendItemAt({ key: "user1", name: "John Doe" }, 0);
 
 console.log(collection.numItems); // 2
 console.log(Array.from(collection));
@@ -53,9 +53,9 @@ console.log(Array.from(collection));
 ```ts
 const collection = new Collection();
 
-collection.appendItem({ key: 'user1', name: 'John Doe' });
-collection.appendItem({ key: 'user3', name: 'Charlie' });
-collection.appendItemAt({ key: 'user2', name: 'Alice' }, 1);
+collection.appendItem({ key: "user1", name: "John Doe" });
+collection.appendItem({ key: "user3", name: "Charlie" });
+collection.appendItemAt({ key: "user2", name: "Alice" }, 1);
 
 console.log(collection.numItems); // 3
 console.log(Array.from(collection));
@@ -68,12 +68,12 @@ console.log(Array.from(collection));
 
 ```ts
 const collection = new Collection({
-  initialItems: [{ key: 'user1', name: 'Old User' }],
+  initialItems: [{ key: "user1", name: "Old User" }],
 });
 
-collection.appendItemAt({ key: 'user1', name: 'Updated User' }, 0);
+collection.appendItemAt({ key: "user1", name: "Updated User" }, 0);
 
 console.log(collection.numItems); // 1
-console.log(collection.getItem('user1'));
+console.log(collection.getItem("user1"));
 // { key: 'user1', name: 'Updated User' }
 ```

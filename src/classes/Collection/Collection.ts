@@ -1,8 +1,8 @@
-import { __DEVELOPMENT__ } from '../../constants/common';
-import { CollectionUpdateEvent } from '../CollectionUpdateEvent';
-import { HookDispatcher } from '../HookDispatcher';
+import { __DEVELOPMENT__ } from "../../constants/common";
+import { CollectionUpdateEvent } from "../CollectionUpdateEvent";
+import { HookDispatcher } from "../HookDispatcher";
 
-import { $CollectionHookDispatcherSymbol } from './constants';
+import { $CollectionHookDispatcherSymbol } from "./constants";
 import {
   CollectionBaseItemData,
   CollectionBaseKeyType,
@@ -13,7 +13,7 @@ import {
   CollectionOptions,
   CollectionPrimaryKeyWithDefault,
   CollectionUpdateEventHandler,
-} from './types';
+} from "./types";
 
 /**
  * A strongly-typed collection class with event support and hook dispatching.
@@ -23,7 +23,7 @@ import {
  * @template ItemData - Shape of the item data.
  */
 export class Collection<
-  PrimaryKey extends string = 'key',
+  PrimaryKey extends string = "key",
   PrimaryKeyType extends CollectionBaseKeyType = CollectionBaseKeyType,
   ItemData extends
     CollectionBaseItemData<PrimaryKey> = CollectionBaseItemData<PrimaryKey>,
@@ -87,7 +87,7 @@ export class Collection<
   >();
 
   /** Field name used as the primary key. */
-  protected readonly primaryKey: PrimaryKey extends never ? 'key' : PrimaryKey;
+  protected readonly primaryKey: PrimaryKey extends never ? "key" : PrimaryKey;
 
   /** Meta information passed to hooks. */
   private readonly hookMeta: CollectionHookParamsMeta<
@@ -120,7 +120,7 @@ export class Collection<
 
     this.initialItems = initialItems.slice();
     this.primaryKey =
-      primaryKey ?? ('key' as CollectionPrimaryKeyWithDefault<PrimaryKey>);
+      primaryKey ?? ("key" as CollectionPrimaryKeyWithDefault<PrimaryKey>);
 
     this.hookMeta = Object.freeze({
       primaryKey: this.primaryKey,
@@ -513,7 +513,7 @@ export class Collection<
 
     if (
       !this._validateItem(item) ||
-      !this[$CollectionHookDispatcherSymbol].dispatch('insert:before', {
+      !this[$CollectionHookDispatcherSymbol].dispatch("insert:before", {
         item,
         index,
         meta: this.hookMeta,
@@ -531,7 +531,7 @@ export class Collection<
     this.items.splice(normalizedIndex, 0, item);
     this.itemsByMap.set(key, item);
 
-    this[$CollectionHookDispatcherSymbol].dispatch('insert:after', {
+    this[$CollectionHookDispatcherSymbol].dispatch("insert:after", {
       item,
       index,
       meta: this.hookMeta,
@@ -547,7 +547,7 @@ export class Collection<
     }
 
     if (
-      !this[$CollectionHookDispatcherSymbol].dispatch('clear:before', {
+      !this[$CollectionHookDispatcherSymbol].dispatch("clear:before", {
         meta: this.hookMeta,
       })
     ) {
@@ -557,7 +557,7 @@ export class Collection<
     this.items.splice(0, this.numItems);
     this.itemsByMap.clear();
 
-    this[$CollectionHookDispatcherSymbol].dispatch('clear:after', {
+    this[$CollectionHookDispatcherSymbol].dispatch("clear:after", {
       meta: this.hookMeta,
     });
 
@@ -618,7 +618,7 @@ export class Collection<
     const targetItemIndex = this.items.indexOf(targetItem);
 
     if (
-      !this[$CollectionHookDispatcherSymbol].dispatch('patch:before', {
+      !this[$CollectionHookDispatcherSymbol].dispatch("patch:before", {
         item: targetItem,
         index: targetItemIndex,
         meta: this.hookMeta,
@@ -637,7 +637,7 @@ export class Collection<
       );
     }
 
-    this[$CollectionHookDispatcherSymbol].dispatch('patch:after', {
+    this[$CollectionHookDispatcherSymbol].dispatch("patch:after", {
       item: targetItem,
       index: targetItemIndex,
       meta: this.hookMeta,
@@ -657,7 +657,7 @@ export class Collection<
     const targetItemIndex = this.items.indexOf(targetItem);
 
     if (
-      !this[$CollectionHookDispatcherSymbol].dispatch('remove:before', {
+      !this[$CollectionHookDispatcherSymbol].dispatch("remove:before", {
         item: targetItem,
         index: targetItemIndex,
         meta: this.hookMeta,
@@ -669,7 +669,7 @@ export class Collection<
     this.items.splice(targetItemIndex, 1);
     this.itemsByMap.delete(key);
 
-    this[$CollectionHookDispatcherSymbol].dispatch('remove:after', {
+    this[$CollectionHookDispatcherSymbol].dispatch("remove:after", {
       item: targetItem,
       index: targetItemIndex,
       meta: this.hookMeta,
@@ -750,9 +750,9 @@ export class Collection<
     const key = item[this.primaryKey];
 
     if (
-      typeof key !== 'string' &&
-      typeof key !== 'bigint' &&
-      (typeof key !== 'number' || !Number.isFinite(key))
+      typeof key !== "string" &&
+      typeof key !== "bigint" &&
+      (typeof key !== "number" || !Number.isFinite(key))
     ) {
       if (__DEVELOPMENT__) {
         console.error(

@@ -46,20 +46,20 @@ yarn add @webeach/collection
 **ES Modules**
 
 ```ts
-import { Collection } from '@webeach/collection';
+import { Collection } from "@webeach/collection";
 ```
 
 **CommonJS**
 
 ```ts
-const { Collection } = require('@webeach/collection');
+const { Collection } = require("@webeach/collection");
 ```
 
 **Browser**
 
 ```html
 <script type="module">
-  import { Collection } from 'https://unpkg.com/@webeach/collection';
+  import { Collection } from "https://unpkg.com/@webeach/collection";
 </script>
 ```
 
@@ -70,22 +70,22 @@ const { Collection } = require('@webeach/collection');
 ### Добавление пользователей
 
 ```js
-import { Collection } from '@webeach/collection';
+import { Collection } from "@webeach/collection";
 
 const users = new Collection({
-  primaryKey: 'id',
+  primaryKey: "id",
 });
 
 users.appendItem({
   id: 1,
-  firstName: 'Ivan',
-  lastName: 'Petrov',
+  firstName: "Ivan",
+  lastName: "Petrov",
 });
 
 users.appendItem({
   id: 2,
-  firstName: 'Jason',
-  lastName: 'Statham',
+  firstName: "Jason",
+  lastName: "Statham",
 });
 
 console.log(users.numItems); // 2
@@ -95,16 +95,16 @@ console.log(users.getItem(2).firstName); // Jason
 ### Добавление элемента и последующая его замена
 
 ```ts
-import { Collection } from '@webeach/collection';
+import { Collection } from "@webeach/collection";
 
 const products = new Collection({
-  primaryKey: 'sku',
+  primaryKey: "sku",
 });
 
-products.appendItem({ sku: 'A001', name: 'Laptop' });
-products.replaceItem('A001', { sku: 'A001', name: 'Laptop Pro' });
+products.appendItem({ sku: "A001", name: "Laptop" });
+products.replaceItem("A001", { sku: "A001", name: "Laptop Pro" });
 
-console.log(products.getItem('A001')?.name); // 'Laptop Pro'
+console.log(products.getItem("A001")?.name); // 'Laptop Pro'
 ```
 
 ---
@@ -112,20 +112,20 @@ console.log(products.getItem('A001')?.name); // 'Laptop Pro'
 ### Массовая замена элементов через `setItems`
 
 ```ts
-import { Collection } from '@webeach/collection';
+import { Collection } from "@webeach/collection";
 
 const tasks = new Collection({
-  primaryKey: 'id',
+  primaryKey: "id",
   initialItems: [
-    { id: 1, title: 'Initial Task 1' },
-    { id: 2, title: 'Initial Task 2' },
+    { id: 1, title: "Initial Task 1" },
+    { id: 2, title: "Initial Task 2" },
   ],
 });
 
 // Полностью заменяем содержимое коллекции
 tasks.setItems([
-  { id: 3, title: 'New Task 3' },
-  { id: 4, title: 'New Task 4' },
+  { id: 3, title: "New Task 3" },
+  { id: 4, title: "New Task 4" },
 ]);
 
 console.log(tasks.numItems); // 2
@@ -138,38 +138,38 @@ console.log(tasks.getItem(3)?.title); // 'New Task 3'
 
 ### `Collection`
 
-+ [constructor](./docs/ru/Collection/constructor.md)
-+ Методы
-  + [appendItem](./docs/ru/Collection/methods/appendItem.md)
-  + [addEventListener](https://developer.mozilla.org/ru/docs/Web/API/EventTarget/addEventListener)
-  + [appendItemAt](./docs/ru/Collection/methods/appendItemAt.md)
-  + [clear](./docs/ru/Collection/methods/clear.md)
-  + [dispatchEvent](https://developer.mozilla.org/ru/docs/Web/API/EventTarget/dispatchEvent)
-  + [forEach](./docs/ru/Collection/methods/forEach.md)
-  + [getItem](./docs/ru/Collection/methods/getItem.md)
-  + [hasItem](./docs/ru/Collection/methods/hasItem.md)
-  + [insertItemAfter](./docs/ru/Collection/methods/insertItemAfter.md)
-  + [insertItemBefore](./docs/ru/Collection/methods/insertItemBefore.md)
-  + [patchItem](./docs/ru/Collection/methods/patchItem.md)
-  + [removeEventListener](https://developer.mozilla.org/ru/docs/Web/API/EventTarget/removeEventListener)
-  + [removeItem](./docs/ru/Collection/methods/removeItem.md)
-  + [replaceItem](./docs/ru/Collection/methods/replaceItem.md)
-  + [reset](./docs/ru/Collection/methods/reset.md)
-  + [setItems](./docs/ru/Collection/methods/setItems.md)
-  + [\[Symbol.iterator\]](./docs/ru/Collection/methods/[Symbol.iterator].md)
-+ Свойства
-  + [numItems](./docs/ru/Collection/properties/numItems.md)
-  + [onUpdate](./docs/ru/Collection/properties/onUpdate.md)
-+ Хуки
-  + [clear:*](./docs/ru/Collection/hooks/clear.md)
-  + [insert:*](./docs/ru/Collection/hooks/insert.md)
-  + [patch:*](./docs/ru/Collection/hooks/patch.md)
-  + [remove:*](./docs/ru/Collection/hooks/remove.md)
+- [constructor](./docs/ru/Collection/constructor.md)
+- Методы
+  - [appendItem](./docs/ru/Collection/methods/appendItem.md)
+  - [addEventListener](https://developer.mozilla.org/ru/docs/Web/API/EventTarget/addEventListener)
+  - [appendItemAt](./docs/ru/Collection/methods/appendItemAt.md)
+  - [clear](./docs/ru/Collection/methods/clear.md)
+  - [dispatchEvent](https://developer.mozilla.org/ru/docs/Web/API/EventTarget/dispatchEvent)
+  - [forEach](./docs/ru/Collection/methods/forEach.md)
+  - [getItem](./docs/ru/Collection/methods/getItem.md)
+  - [hasItem](./docs/ru/Collection/methods/hasItem.md)
+  - [insertItemAfter](./docs/ru/Collection/methods/insertItemAfter.md)
+  - [insertItemBefore](./docs/ru/Collection/methods/insertItemBefore.md)
+  - [patchItem](./docs/ru/Collection/methods/patchItem.md)
+  - [removeEventListener](https://developer.mozilla.org/ru/docs/Web/API/EventTarget/removeEventListener)
+  - [removeItem](./docs/ru/Collection/methods/removeItem.md)
+  - [replaceItem](./docs/ru/Collection/methods/replaceItem.md)
+  - [reset](./docs/ru/Collection/methods/reset.md)
+  - [setItems](./docs/ru/Collection/methods/setItems.md)
+  - [\[Symbol.iterator\]](./docs/ru/Collection/methods/[Symbol.iterator].md)
+- Свойства
+  - [numItems](./docs/ru/Collection/properties/numItems.md)
+  - [onUpdate](./docs/ru/Collection/properties/onUpdate.md)
+- Хуки
+  - [clear:\*](./docs/ru/Collection/hooks/clear.md)
+  - [insert:\*](./docs/ru/Collection/hooks/insert.md)
+  - [patch:\*](./docs/ru/Collection/hooks/patch.md)
+  - [remove:\*](./docs/ru/Collection/hooks/remove.md)
 
 ### `CollectionUpdateEvent`
 
-+ [constructor](./docs/ru/CollectionUpdateEvent/constructor.md)
-+ Наследует API [CustomEvent](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent)
+- [constructor](./docs/ru/CollectionUpdateEvent/constructor.md)
+- Наследует API [CustomEvent](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent)
 
 ---
 

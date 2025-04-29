@@ -1,4 +1,4 @@
-export { Collection } from './Collection';
+export { Collection } from "./Collection";
 
 export type {
   CollectionBaseItemData,
@@ -8,4 +8,4 @@ export type {
   CollectionOptions,
   CollectionPrimaryKeyWithDefault,
   CollectionUpdateEventHandler,
-} from './types';
+} from "./types";

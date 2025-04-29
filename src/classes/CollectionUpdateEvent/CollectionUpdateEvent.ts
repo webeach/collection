@@ -1,5 +1,5 @@
-import { BaseObject } from '../../types/common';
-import { CollectionBaseKeyType, CollectionItem } from '../Collection';
+import { BaseObject } from "../../types/common";
+import { CollectionBaseKeyType, CollectionItem } from "../Collection";
 
 /**
  * Custom event for notifying about updates in a collection.
@@ -9,7 +9,7 @@ import { CollectionBaseKeyType, CollectionItem } from '../Collection';
  * @typeParam ItemData - The shape of the item data (default is `BaseObject`).
  */
 export class CollectionUpdateEvent<
-  PrimaryKey extends string = 'key',
+  PrimaryKey extends string = "key",
   PrimaryKeyType extends CollectionBaseKeyType = CollectionBaseKeyType,
   ItemData extends BaseObject = BaseObject,
 > extends CustomEvent<
@@ -28,7 +28,7 @@ export class CollectionUpdateEvent<
   constructor(
     items: ReadonlyArray<CollectionItem<PrimaryKey, PrimaryKeyType, ItemData>>,
   ) {
-    super('update', { detail: items });
+    super("update", { detail: items });
   }
 
   /**

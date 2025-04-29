@@ -39,16 +39,26 @@ hook({
 ### Блокировка очистки коллекции
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('clear:before', ({ meta }) => {
-  console.log(`Попытка очистить коллекцию с первичным ключом ${meta.primaryKey}`);
-  return false; // Запрещаем очистку
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "clear:before",
+  ({ meta }) => {
+    console.log(
+      `Попытка очистить коллекцию с первичным ключом ${meta.primaryKey}`,
+    );
+    return false; // Запрещаем очистку
+  },
+);
 ```
 
 ### Действие после успешной очистки
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('clear:after', ({ meta }) => {
-  console.log(`Коллекция с первичным ключом ${meta.primaryKey} успешно очищена.`);
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "clear:after",
+  ({ meta }) => {
+    console.log(
+      `Коллекция с первичным ключом ${meta.primaryKey} успешно очищена.`,
+    );
+  },
+);
 ```

@@ -1,220 +1,220 @@
-import { CollectionUpdateEvent } from '../../CollectionUpdateEvent';
-import { Collection } from '../Collection';
-import { $CollectionHookDispatcherSymbol } from '../constants';
+import { CollectionUpdateEvent } from "../../CollectionUpdateEvent";
+import { Collection } from "../Collection";
+import { $CollectionHookDispatcherSymbol } from "../constants";
 
-describe('Collection basic methods', () => {
+describe("Collection basic methods", () => {
   // --- appendItem ---
-  it('appendItem should add item to empty collection', () => {
+  it("appendItem should add item to empty collection", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    collection.appendItem({ key: 'a', value: 1 });
+    collection.appendItem({ key: "a", value: 1 });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('a')?.value).toBe(1);
+    expect(collection.getItem("a")?.value).toBe(1);
   });
 
-  it('appendItem should replace item with same key', () => {
+  it("appendItem should replace item with same key", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    collection.appendItem({ key: 'a', value: 1 });
-    collection.appendItem({ key: 'a', value: 2 });
+    collection.appendItem({ key: "a", value: 1 });
+    collection.appendItem({ key: "a", value: 2 });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('a')?.value).toBe(2);
+    expect(collection.getItem("a")?.value).toBe(2);
   });
 
   // --- appendItemAt ---
-  it('appendItemAt should insert item at specific index', () => {
+  it("appendItemAt should insert item at specific index", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    collection.appendItem({ key: 'x', value: 10 });
-    collection.appendItem({ key: 'z', value: 30 });
-    collection.appendItemAt({ key: 'y', value: 20 }, 1);
+    collection.appendItem({ key: "x", value: 10 });
+    collection.appendItem({ key: "z", value: 30 });
+    collection.appendItemAt({ key: "y", value: 20 }, 1);
 
     const keys = [...collection].map((i) => i.key);
-    expect(keys).toEqual(['x', 'y', 'z']);
+    expect(keys).toEqual(["x", "y", "z"]);
   });
 
-  it('appendItemAt should clamp index to bounds', () => {
+  it("appendItemAt should clamp index to bounds", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    collection.appendItem({ key: 'start', value: 1 });
-    collection.appendItemAt({ key: 'tooBig', value: 2 }, 100);
+    collection.appendItem({ key: "start", value: 1 });
+    collection.appendItemAt({ key: "tooBig", value: 2 }, 100);
 
     const keys = [...collection].map((i) => i.key);
-    expect(keys).toEqual(['start', 'tooBig']);
+    expect(keys).toEqual(["start", "tooBig"]);
   });
 
   // --- prependItem ---
-  it('prependItem should add item at the beginning', () => {
+  it("prependItem should add item at the beginning", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    collection.appendItem({ key: 'b', value: 2 });
-    collection.prependItem({ key: 'a', value: 1 });
+    collection.appendItem({ key: "b", value: 2 });
+    collection.prependItem({ key: "a", value: 1 });
 
     const keys = [...collection].map((i) => i.key);
-    expect(keys).toEqual(['a', 'b']);
+    expect(keys).toEqual(["a", "b"]);
   });
 
-  it('prependItem should replace item if key exists', () => {
+  it("prependItem should replace item if key exists", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    collection.appendItem({ key: 'dup', value: 100 });
-    collection.prependItem({ key: 'dup', value: 200 });
+    collection.appendItem({ key: "dup", value: 100 });
+    collection.prependItem({ key: "dup", value: 200 });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('dup')?.value).toBe(200);
+    expect(collection.getItem("dup")?.value).toBe(200);
   });
 
   // --- insertItemBefore ---
-  it('insertItemBefore should insert item before existing key', () => {
+  it("insertItemBefore should insert item before existing key", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    collection.appendItem({ key: '1', value: 1 });
-    collection.appendItem({ key: '3', value: 3 });
-    collection.insertItemBefore('3', { key: '2', value: 2 });
+    collection.appendItem({ key: "1", value: 1 });
+    collection.appendItem({ key: "3", value: 3 });
+    collection.insertItemBefore("3", { key: "2", value: 2 });
 
     const keys = [...collection].map((i) => i.key);
-    expect(keys).toEqual(['1', '2', '3']);
+    expect(keys).toEqual(["1", "2", "3"]);
   });
 
-  it('insertItemBefore should append if target key not found', () => {
+  it("insertItemBefore should append if target key not found", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    collection.appendItem({ key: 'only', value: 1 });
-    collection.insertItemBefore('missing', { key: 'new', value: 2 });
+    collection.appendItem({ key: "only", value: 1 });
+    collection.insertItemBefore("missing", { key: "new", value: 2 });
 
     const keys = [...collection].map((i) => i.key);
-    expect(keys).toEqual(['only', 'new']);
+    expect(keys).toEqual(["only", "new"]);
   });
 
   // --- insertItemAfter ---
-  it('insertItemAfter should insert item after existing key', () => {
+  it("insertItemAfter should insert item after existing key", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    collection.appendItem({ key: '1', value: 1 });
-    collection.appendItem({ key: '3', value: 3 });
-    collection.insertItemAfter('1', { key: '2', value: 2 });
+    collection.appendItem({ key: "1", value: 1 });
+    collection.appendItem({ key: "3", value: 3 });
+    collection.insertItemAfter("1", { key: "2", value: 2 });
 
     const keys = [...collection].map((i) => i.key);
-    expect(keys).toEqual(['1', '2', '3']);
+    expect(keys).toEqual(["1", "2", "3"]);
   });
 
-  it('insertItemAfter should append if target key not found', () => {
+  it("insertItemAfter should append if target key not found", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    collection.appendItem({ key: 'only', value: 1 });
-    collection.insertItemAfter('missing', { key: 'new', value: 2 });
+    collection.appendItem({ key: "only", value: 1 });
+    collection.insertItemAfter("missing", { key: "new", value: 2 });
 
     const keys = [...collection].map((i) => i.key);
-    expect(keys).toEqual(['only', 'new']);
+    expect(keys).toEqual(["only", "new"]);
   });
 
   // --- replaceItem ---
-  it('replaceItem should replace existing item', () => {
+  it("replaceItem should replace existing item", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    collection.appendItem({ key: 'a', value: 1 });
-    collection.replaceItem('a', { key: 'a', value: 100 });
+    collection.appendItem({ key: "a", value: 1 });
+    collection.replaceItem("a", { key: "a", value: 100 });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('a')?.value).toBe(100);
+    expect(collection.getItem("a")?.value).toBe(100);
   });
 
-  it('replaceItem should insert if key not exists', () => {
+  it("replaceItem should insert if key not exists", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    collection.replaceItem('new', { key: 'new', value: 999 });
+    collection.replaceItem("new", { key: "new", value: 999 });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('new')?.value).toBe(999);
+    expect(collection.getItem("new")?.value).toBe(999);
   });
 
   // --- removeItem ---
-  it('removeItem should remove item by key', () => {
+  it("removeItem should remove item by key", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    collection.appendItem({ key: 'x', value: 10 });
-    const removed = collection.removeItem('x');
+    collection.appendItem({ key: "x", value: 10 });
+    const removed = collection.removeItem("x");
 
     expect(removed).toBe(true);
-    expect(collection.getItem('x')).toBeNull();
+    expect(collection.getItem("x")).toBeNull();
     expect(collection.numItems).toBe(0);
   });
 
-  it('removeItem should return false if key not found', () => {
+  it("removeItem should return false if key not found", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    const removed = collection.removeItem('missing');
+    const removed = collection.removeItem("missing");
     expect(removed).toBe(false);
   });
 
   // --- clear ---
-  it('clear should remove all items', () => {
+  it("clear should remove all items", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >({
       initialItems: [
-        { key: 'a', value: 1 },
-        { key: 'b', value: 2 },
+        { key: "a", value: 1 },
+        { key: "b", value: 2 },
       ],
     });
 
@@ -223,46 +223,46 @@ describe('Collection basic methods', () => {
   });
 
   // --- reset ---
-  it('reset should restore initial items', () => {
+  it("reset should restore initial items", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >({
-      initialItems: [{ key: 'init', value: 1 }],
+      initialItems: [{ key: "init", value: 1 }],
     });
 
-    collection.appendItem({ key: 'other', value: 2 });
+    collection.appendItem({ key: "other", value: 2 });
     collection.reset();
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('init')?.value).toBe(1);
+    expect(collection.getItem("init")?.value).toBe(1);
   });
 
   // --- setItems ---
-  it('setItems should replace all items', () => {
+  it("setItems should replace all items", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
     collection.setItems([
-      { key: 'new1', value: 100 },
-      { key: 'new2', value: 200 },
+      { key: "new1", value: 100 },
+      { key: "new2", value: 200 },
     ]);
 
     expect(collection.numItems).toBe(2);
-    expect(collection.getItem('new1')?.value).toBe(100);
+    expect(collection.getItem("new1")?.value).toBe(100);
   });
 
-  it('setItems should clear if empty array given', () => {
+  it("setItems should clear if empty array given", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >({
-      initialItems: [{ key: 'one', value: 1 }],
+      initialItems: [{ key: "one", value: 1 }],
     });
 
     collection.setItems([]);
@@ -270,208 +270,208 @@ describe('Collection basic methods', () => {
   });
 
   // --- patchItem ---
-  it('patchItem should partially update item', () => {
+  it("patchItem should partially update item", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number; desc?: string }
     >({
-      initialItems: [{ key: 'item', value: 123 }],
+      initialItems: [{ key: "item", value: 123 }],
     });
 
-    const result = collection.patchItem('item', { desc: 'updated' });
+    const result = collection.patchItem("item", { desc: "updated" });
 
     expect(result).toBe(true);
-    expect(collection.getItem('item')?.desc).toBe('updated');
+    expect(collection.getItem("item")?.desc).toBe("updated");
   });
 
-  it('patchItem should not patch non-existing item', () => {
+  it("patchItem should not patch non-existing item", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
 
-    const result = collection.patchItem('nope', { value: 999 });
+    const result = collection.patchItem("nope", { value: 999 });
     expect(result).toBe(false);
   });
 
-  it('patchItem should keep primaryKey unchanged', () => {
+  it("patchItem should keep primaryKey unchanged", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >({
-      initialItems: [{ key: 'stay', value: 1 }],
+      initialItems: [{ key: "stay", value: 1 }],
     });
 
-    collection.patchItem('stay', { value: 777 });
+    collection.patchItem("stay", { value: 777 });
 
-    expect(collection.getItem('stay')?.key).toBe('stay');
-    expect(collection.getItem('stay')?.value).toBe(777);
+    expect(collection.getItem("stay")?.key).toBe("stay");
+    expect(collection.getItem("stay")?.value).toBe(777);
   });
 });
 
-describe('Collection events', () => {
-  it('appendItem should call update with correct detail', () => {
+describe("Collection events", () => {
+  it("appendItem should call update with correct detail", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const handler = vi.fn();
-    collection.addEventListener('update', handler);
+    collection.addEventListener("update", handler);
 
-    collection.appendItem({ key: 'a', value: 1 });
+    collection.appendItem({ key: "a", value: 1 });
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler).toHaveBeenLastCalledWith(
-      expect.objectContaining({ detail: [{ key: 'a', value: 1 }] }),
+      expect.objectContaining({ detail: [{ key: "a", value: 1 }] }),
     );
   });
 
-  it('prependItem should add item at start', () => {
+  it("prependItem should add item at start", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const handler = vi.fn();
-    collection.appendItem({ key: 'b', value: 2 });
-    collection.addEventListener('update', handler);
+    collection.appendItem({ key: "b", value: 2 });
+    collection.addEventListener("update", handler);
 
-    collection.prependItem({ key: 'a', value: 1 });
-
-    expect(handler).toHaveBeenCalledTimes(1);
-    expect(handler).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        detail: [
-          { key: 'a', value: 1 },
-          { key: 'b', value: 2 },
-        ],
-      }),
-    );
-  });
-
-  it('appendItemAt should insert at correct index', () => {
-    const collection = new Collection<
-      'key',
-      string,
-      { key: string; value: number }
-    >();
-    const handler = vi.fn();
-    collection.appendItem({ key: 'one', value: 1 });
-    collection.appendItem({ key: 'three', value: 3 });
-    collection.addEventListener('update', handler);
-
-    collection.appendItemAt({ key: 'two', value: 2 }, 1);
+    collection.prependItem({ key: "a", value: 1 });
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler).toHaveBeenLastCalledWith(
       expect.objectContaining({
         detail: [
-          { key: 'one', value: 1 },
-          { key: 'two', value: 2 },
-          { key: 'three', value: 3 },
+          { key: "a", value: 1 },
+          { key: "b", value: 2 },
         ],
       }),
     );
   });
 
-  it('insertItemBefore should insert item before target', () => {
+  it("appendItemAt should insert at correct index", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const handler = vi.fn();
-    collection.appendItem({ key: 'x', value: 1 });
-    collection.addEventListener('update', handler);
+    collection.appendItem({ key: "one", value: 1 });
+    collection.appendItem({ key: "three", value: 3 });
+    collection.addEventListener("update", handler);
 
-    collection.insertItemBefore('x', { key: 'before', value: 0 });
+    collection.appendItemAt({ key: "two", value: 2 }, 1);
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler).toHaveBeenLastCalledWith(
       expect.objectContaining({
         detail: [
-          { key: 'before', value: 0 },
-          { key: 'x', value: 1 },
+          { key: "one", value: 1 },
+          { key: "two", value: 2 },
+          { key: "three", value: 3 },
         ],
       }),
     );
   });
 
-  it('insertItemAfter should insert item after target', () => {
+  it("insertItemBefore should insert item before target", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const handler = vi.fn();
-    collection.appendItem({ key: 'x', value: 1 });
-    collection.addEventListener('update', handler);
+    collection.appendItem({ key: "x", value: 1 });
+    collection.addEventListener("update", handler);
 
-    collection.insertItemAfter('x', { key: 'after', value: 2 });
+    collection.insertItemBefore("x", { key: "before", value: 0 });
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler).toHaveBeenLastCalledWith(
       expect.objectContaining({
         detail: [
-          { key: 'x', value: 1 },
-          { key: 'after', value: 2 },
+          { key: "before", value: 0 },
+          { key: "x", value: 1 },
         ],
       }),
     );
   });
 
-  it('replaceItem should update existing item', () => {
+  it("insertItemAfter should insert item after target", () => {
     const collection = new Collection<
-      'key',
+      "key",
+      string,
+      { key: string; value: number }
+    >();
+    const handler = vi.fn();
+    collection.appendItem({ key: "x", value: 1 });
+    collection.addEventListener("update", handler);
+
+    collection.insertItemAfter("x", { key: "after", value: 2 });
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        detail: [
+          { key: "x", value: 1 },
+          { key: "after", value: 2 },
+        ],
+      }),
+    );
+  });
+
+  it("replaceItem should update existing item", () => {
+    const collection = new Collection<
+      "key",
       string,
       { key: string; value: number }
     >({
-      initialItems: [{ key: 'a', value: 10 }],
+      initialItems: [{ key: "a", value: 10 }],
     });
     const handler = vi.fn();
-    collection.addEventListener('update', handler);
+    collection.addEventListener("update", handler);
 
-    collection.replaceItem('a', { key: 'a', value: 999 });
+    collection.replaceItem("a", { key: "a", value: 999 });
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler).toHaveBeenLastCalledWith(
-      expect.objectContaining({ detail: [{ key: 'a', value: 999 }] }),
+      expect.objectContaining({ detail: [{ key: "a", value: 999 }] }),
     );
   });
 
-  it('replaceItem (new) should add item', () => {
+  it("replaceItem (new) should add item", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const handler = vi.fn();
-    collection.addEventListener('update', handler);
+    collection.addEventListener("update", handler);
 
-    collection.replaceItem('new', { key: 'new', value: 555 });
+    collection.replaceItem("new", { key: "new", value: 555 });
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler).toHaveBeenLastCalledWith(
-      expect.objectContaining({ detail: [{ key: 'new', value: 555 }] }),
+      expect.objectContaining({ detail: [{ key: "new", value: 555 }] }),
     );
   });
 
-  it('removeItem should clear item from detail', () => {
+  it("removeItem should clear item from detail", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >({
-      initialItems: [{ key: 'del', value: 1 }],
+      initialItems: [{ key: "del", value: 1 }],
     });
     const handler = vi.fn();
-    collection.addEventListener('update', handler);
+    collection.addEventListener("update", handler);
 
-    collection.removeItem('del');
+    collection.removeItem("del");
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler).toHaveBeenLastCalledWith(
@@ -479,16 +479,16 @@ describe('Collection events', () => {
     );
   });
 
-  it('clear should empty detail', () => {
+  it("clear should empty detail", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >({
-      initialItems: [{ key: 'some', value: 1 }],
+      initialItems: [{ key: "some", value: 1 }],
     });
     const handler = vi.fn();
-    collection.addEventListener('update', handler);
+    collection.addEventListener("update", handler);
 
     collection.clear();
 
@@ -498,61 +498,61 @@ describe('Collection events', () => {
     );
   });
 
-  it('reset should restore initialItems in detail', () => {
+  it("reset should restore initialItems in detail", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >({
-      initialItems: [{ key: 'init', value: 1 }],
+      initialItems: [{ key: "init", value: 1 }],
     });
     const handler = vi.fn();
-    collection.appendItem({ key: 'extra', value: 999 });
-    collection.addEventListener('update', handler);
+    collection.appendItem({ key: "extra", value: 999 });
+    collection.addEventListener("update", handler);
 
     collection.reset();
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler).toHaveBeenLastCalledWith(
-      expect.objectContaining({ detail: [{ key: 'init', value: 1 }] }),
+      expect.objectContaining({ detail: [{ key: "init", value: 1 }] }),
     );
   });
 
-  it('setItems should set new detail', () => {
+  it("setItems should set new detail", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const handler = vi.fn();
-    collection.addEventListener('update', handler);
+    collection.addEventListener("update", handler);
 
     collection.setItems([
-      { key: 'a', value: 1 },
-      { key: 'b', value: 2 },
+      { key: "a", value: 1 },
+      { key: "b", value: 2 },
     ]);
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler).toHaveBeenLastCalledWith(
       expect.objectContaining({
         detail: [
-          { key: 'a', value: 1 },
-          { key: 'b', value: 2 },
+          { key: "a", value: 1 },
+          { key: "b", value: 2 },
         ],
       }),
     );
   });
 
-  it('setItems([]) should empty detail', () => {
+  it("setItems([]) should empty detail", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >({
-      initialItems: [{ key: 'exists', value: 10 }],
+      initialItems: [{ key: "exists", value: 10 }],
     });
     const handler = vi.fn();
-    collection.addEventListener('update', handler);
+    collection.addEventListener("update", handler);
 
     collection.setItems([]);
 
@@ -562,84 +562,84 @@ describe('Collection events', () => {
     );
   });
 
-  it('patchItem should update fields', () => {
+  it("patchItem should update fields", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number; desc?: string }
     >({
-      initialItems: [{ key: 'patch', value: 5 }],
+      initialItems: [{ key: "patch", value: 5 }],
     });
     const handler = vi.fn();
-    collection.addEventListener('update', handler);
+    collection.addEventListener("update", handler);
 
-    collection.patchItem('patch', { desc: 'updated' });
+    collection.patchItem("patch", { desc: "updated" });
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        detail: [{ key: 'patch', value: 5, desc: 'updated' }],
+        detail: [{ key: "patch", value: 5, desc: "updated" }],
       }),
     );
   });
 
-  it('patchItem missing should not dispatch event', () => {
+  it("patchItem missing should not dispatch event", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const handler = vi.fn();
-    collection.addEventListener('update', handler);
+    collection.addEventListener("update", handler);
 
-    const result = collection.patchItem('missing', { value: 999 });
+    const result = collection.patchItem("missing", { value: 999 });
 
     expect(result).toBe(false);
     expect(handler).not.toHaveBeenCalled();
   });
 
-  it('insertItemBefore missing key should append', () => {
+  it("insertItemBefore missing key should append", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const handler = vi.fn();
-    collection.addEventListener('update', handler);
+    collection.addEventListener("update", handler);
 
-    collection.insertItemBefore('missing', { key: 'new', value: 5 });
+    collection.insertItemBefore("missing", { key: "new", value: 5 });
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler).toHaveBeenLastCalledWith(
-      expect.objectContaining({ detail: [{ key: 'new', value: 5 }] }),
+      expect.objectContaining({ detail: [{ key: "new", value: 5 }] }),
     );
   });
 
-  it('insertItemAfter missing key should append', () => {
+  it("insertItemAfter missing key should append", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const handler = vi.fn();
-    collection.addEventListener('update', handler);
+    collection.addEventListener("update", handler);
 
-    collection.insertItemAfter('missing', { key: 'new', value: 5 });
+    collection.insertItemAfter("missing", { key: "new", value: 5 });
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler).toHaveBeenLastCalledWith(
-      expect.objectContaining({ detail: [{ key: 'new', value: 5 }] }),
+      expect.objectContaining({ detail: [{ key: "new", value: 5 }] }),
     );
   });
 
-  it('reset empty collection should keep detail empty', () => {
+  it("reset empty collection should keep detail empty", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const handler = vi.fn();
-    collection.addEventListener('update', handler);
+    collection.addEventListener("update", handler);
 
     collection.reset();
 
@@ -649,14 +649,14 @@ describe('Collection events', () => {
     );
   });
 
-  it('clear empty collection should keep detail empty', () => {
+  it("clear empty collection should keep detail empty", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const handler = vi.fn();
-    collection.addEventListener('update', handler);
+    collection.addEventListener("update", handler);
 
     collection.clear();
 
@@ -664,28 +664,28 @@ describe('Collection events', () => {
   });
 });
 
-describe('Collection events - multiple handlers and stopImmediatePropagation', () => {
-  it('should call multiple addEventListener handlers', () => {
+describe("Collection events - multiple handlers and stopImmediatePropagation", () => {
+  it("should call multiple addEventListener handlers", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const handler1 = vi.fn();
     const handler2 = vi.fn();
 
-    collection.addEventListener('update', handler1);
-    collection.addEventListener('update', handler2);
+    collection.addEventListener("update", handler1);
+    collection.addEventListener("update", handler2);
 
-    collection.appendItem({ key: 'x', value: 1 });
+    collection.appendItem({ key: "x", value: 1 });
 
     expect(handler1).toHaveBeenCalledOnce();
     expect(handler2).toHaveBeenCalledOnce();
   });
 
-  it('should call both onUpdate and addEventListener handler', () => {
+  it("should call both onUpdate and addEventListener handler", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
@@ -693,17 +693,17 @@ describe('Collection events - multiple handlers and stopImmediatePropagation', (
     const listenerHandler = vi.fn();
 
     collection.onUpdate = onUpdateHandler;
-    collection.addEventListener('update', listenerHandler);
+    collection.addEventListener("update", listenerHandler);
 
-    collection.appendItem({ key: 'x', value: 1 });
+    collection.appendItem({ key: "x", value: 1 });
 
     expect(onUpdateHandler).toHaveBeenCalledOnce();
     expect(listenerHandler).toHaveBeenCalledOnce();
   });
 
-  it('stopImmediatePropagation in onUpdate should prevent addEventListener handlers', () => {
+  it("stopImmediatePropagation in onUpdate should prevent addEventListener handlers", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
@@ -712,16 +712,16 @@ describe('Collection events - multiple handlers and stopImmediatePropagation', (
     collection.onUpdate = (event) => {
       event.stopImmediatePropagation();
     };
-    collection.addEventListener('update', listenerHandler);
+    collection.addEventListener("update", listenerHandler);
 
-    collection.appendItem({ key: 'x', value: 1 });
+    collection.appendItem({ key: "x", value: 1 });
 
     expect(listenerHandler).not.toHaveBeenCalled();
   });
 
-  it('stopImmediatePropagation in first addEventListener should prevent next', () => {
+  it("stopImmediatePropagation in first addEventListener should prevent next", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
@@ -730,34 +730,34 @@ describe('Collection events - multiple handlers and stopImmediatePropagation', (
     });
     const secondHandler = vi.fn();
 
-    collection.addEventListener('update', firstHandler);
-    collection.addEventListener('update', secondHandler);
+    collection.addEventListener("update", firstHandler);
+    collection.addEventListener("update", secondHandler);
 
-    collection.appendItem({ key: 'x', value: 1 });
+    collection.appendItem({ key: "x", value: 1 });
 
     expect(firstHandler).toHaveBeenCalledOnce();
     expect(secondHandler).not.toHaveBeenCalled();
   });
 
-  it('should call handlers in correct order', () => {
+  it("should call handlers in correct order", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const calls: string[] = [];
 
-    collection.addEventListener('update', () => calls.push('first'));
-    collection.addEventListener('update', () => calls.push('second'));
+    collection.addEventListener("update", () => calls.push("first"));
+    collection.addEventListener("update", () => calls.push("second"));
 
-    collection.appendItem({ key: 'x', value: 1 });
+    collection.appendItem({ key: "x", value: 1 });
 
-    expect(calls).toEqual(['first', 'second']);
+    expect(calls).toEqual(["first", "second"]);
   });
 
-  it('onUpdate should not block addEventListener if not stopped', () => {
+  it("onUpdate should not block addEventListener if not stopped", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
@@ -765,17 +765,17 @@ describe('Collection events - multiple handlers and stopImmediatePropagation', (
     const eventListenerHandler = vi.fn();
 
     collection.onUpdate = onUpdateHandler;
-    collection.addEventListener('update', eventListenerHandler);
+    collection.addEventListener("update", eventListenerHandler);
 
-    collection.appendItem({ key: 'x', value: 1 });
+    collection.appendItem({ key: "x", value: 1 });
 
     expect(onUpdateHandler).toHaveBeenCalledOnce();
     expect(eventListenerHandler).toHaveBeenCalledOnce();
   });
 
-  it('stopImmediatePropagation in onUpdate should not block onUpdate itself', () => {
+  it("stopImmediatePropagation in onUpdate should not block onUpdate itself", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
@@ -785,66 +785,66 @@ describe('Collection events - multiple handlers and stopImmediatePropagation', (
 
     collection.onUpdate = onUpdateHandler;
 
-    collection.appendItem({ key: 'x', value: 1 });
+    collection.appendItem({ key: "x", value: 1 });
 
     expect(onUpdateHandler).toHaveBeenCalledOnce();
   });
 
-  it('should dispatch multiple events independently', () => {
+  it("should dispatch multiple events independently", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const handler = vi.fn();
-    collection.addEventListener('update', handler);
+    collection.addEventListener("update", handler);
 
-    collection.appendItem({ key: 'a', value: 1 });
-    collection.appendItem({ key: 'b', value: 2 });
+    collection.appendItem({ key: "a", value: 1 });
+    collection.appendItem({ key: "b", value: 2 });
 
     expect(handler).toHaveBeenCalledTimes(2);
   });
 
-  it('should call new listener after being added dynamically', () => {
+  it("should call new listener after being added dynamically", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; value: number }
     >();
     const handler = vi.fn();
 
-    collection.appendItem({ key: 'first', value: 1 });
+    collection.appendItem({ key: "first", value: 1 });
 
-    collection.addEventListener('update', handler);
-    collection.appendItem({ key: 'second', value: 2 });
+    collection.addEventListener("update", handler);
+    collection.appendItem({ key: "second", value: 2 });
 
     expect(handler).toHaveBeenCalledOnce();
   });
 });
 
-describe('Collection with different primaryKeys (fixed)', () => {
-  it('should work with primaryKey = string', () => {
+describe("Collection with different primaryKeys (fixed)", () => {
+  it("should work with primaryKey = string", () => {
     const collection = new Collection<
-      'uid',
+      "uid",
       string,
       { uid: string; name: string }
     >({
-      primaryKey: 'uid',
+      primaryKey: "uid",
     });
 
-    collection.appendItem({ uid: 'user-1', name: 'Alice' });
+    collection.appendItem({ uid: "user-1", name: "Alice" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('user-1')?.name).toBe('Alice');
+    expect(collection.getItem("user-1")?.name).toBe("Alice");
   });
 
-  it('should work with primaryKey = number', () => {
+  it("should work with primaryKey = number", () => {
     const collection = new Collection<
-      'id',
+      "id",
       number,
       { id: number; value: number }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     collection.appendItem({ id: 101, value: 42 });
@@ -853,46 +853,46 @@ describe('Collection with different primaryKeys (fixed)', () => {
     expect(collection.getItem(101)?.value).toBe(42);
   });
 
-  it('should work with primaryKey = bigint', () => {
+  it("should work with primaryKey = bigint", () => {
     const collection = new Collection<
-      'bigId',
+      "bigId",
       bigint,
       { bigId: bigint; data: string }
     >({
-      primaryKey: 'bigId',
+      primaryKey: "bigId",
     });
 
-    const bigKey = BigInt('9007199254740991');
+    const bigKey = BigInt("9007199254740991");
 
-    collection.appendItem({ bigId: bigKey, data: 'Huge' });
+    collection.appendItem({ bigId: bigKey, data: "Huge" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem(bigKey)?.data).toBe('Huge');
+    expect(collection.getItem(bigKey)?.data).toBe("Huge");
   });
 
-  it('should replace item with same string primaryKey', () => {
+  it("should replace item with same string primaryKey", () => {
     const collection = new Collection<
-      'slug',
+      "slug",
       string,
       { slug: string; title: string }
     >({
-      primaryKey: 'slug',
+      primaryKey: "slug",
     });
 
-    collection.appendItem({ slug: 'post-1', title: 'First' });
-    collection.appendItem({ slug: 'post-1', title: 'Updated First' });
+    collection.appendItem({ slug: "post-1", title: "First" });
+    collection.appendItem({ slug: "post-1", title: "Updated First" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('post-1')?.title).toBe('Updated First');
+    expect(collection.getItem("post-1")?.title).toBe("Updated First");
   });
 
-  it('should replace item with same number primaryKey', () => {
+  it("should replace item with same number primaryKey", () => {
     const collection = new Collection<
-      'id',
+      "id",
       number,
       { id: number; value: number }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     collection.appendItem({ id: 1, value: 123 });
@@ -902,51 +902,51 @@ describe('Collection with different primaryKeys (fixed)', () => {
     expect(collection.getItem(1)?.value).toBe(456);
   });
 
-  it('should replace item with same bigint primaryKey', () => {
+  it("should replace item with same bigint primaryKey", () => {
     const collection = new Collection<
-      'bigId',
+      "bigId",
       bigint,
       { bigId: bigint; value: string }
     >({
-      primaryKey: 'bigId',
+      primaryKey: "bigId",
     });
 
-    const id = BigInt('12345678901234567890');
+    const id = BigInt("12345678901234567890");
 
-    collection.appendItem({ bigId: id, value: 'initial' });
-    collection.appendItem({ bigId: id, value: 'updated' });
+    collection.appendItem({ bigId: id, value: "initial" });
+    collection.appendItem({ bigId: id, value: "updated" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem(id)?.value).toBe('updated');
+    expect(collection.getItem(id)?.value).toBe("updated");
   });
 
-  it('should correctly remove item by string key', () => {
+  it("should correctly remove item by string key", () => {
     const collection = new Collection<
-      'key',
+      "key",
       string,
       { key: string; text: string }
     >({
-      primaryKey: 'key',
+      primaryKey: "key",
     });
 
-    collection.appendItem({ key: 'abc', text: 'Test' });
-    const removed = collection.removeItem('abc');
+    collection.appendItem({ key: "abc", text: "Test" });
+    const removed = collection.removeItem("abc");
 
     expect(removed).toBe(true);
-    expect(collection.getItem('abc')).toBeNull();
+    expect(collection.getItem("abc")).toBeNull();
     expect(collection.numItems).toBe(0);
   });
 
-  it('should correctly remove item by number key', () => {
+  it("should correctly remove item by number key", () => {
     const collection = new Collection<
-      'id',
+      "id",
       number,
       { id: number; text: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 10, text: 'Number Key' });
+    collection.appendItem({ id: 10, text: "Number Key" });
     const removed = collection.removeItem(10);
 
     expect(removed).toBe(true);
@@ -954,17 +954,17 @@ describe('Collection with different primaryKeys (fixed)', () => {
     expect(collection.numItems).toBe(0);
   });
 
-  it('should correctly remove item by bigint key', () => {
+  it("should correctly remove item by bigint key", () => {
     const collection = new Collection<
-      'uid',
+      "uid",
       bigint,
       { uid: bigint; name: string }
     >({
-      primaryKey: 'uid',
+      primaryKey: "uid",
     });
 
     const key = BigInt(987654321);
-    collection.appendItem({ uid: key, name: 'BigUser' });
+    collection.appendItem({ uid: key, name: "BigUser" });
 
     const removed = collection.removeItem(key);
 
@@ -973,343 +973,343 @@ describe('Collection with different primaryKeys (fixed)', () => {
     expect(collection.numItems).toBe(0);
   });
 
-  it('should patch item with string key', () => {
+  it("should patch item with string key", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; value: number }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'patch-me', value: 1 });
-    collection.patchItem('patch-me', { value: 999 });
+    collection.appendItem({ id: "patch-me", value: 1 });
+    collection.patchItem("patch-me", { value: 999 });
 
-    expect(collection.getItem('patch-me')?.value).toBe(999);
+    expect(collection.getItem("patch-me")?.value).toBe(999);
   });
 
-  it('should patch item with number key', () => {
+  it("should patch item with number key", () => {
     const collection = new Collection<
-      'code',
+      "code",
       number,
       { code: number; status: string }
     >({
-      primaryKey: 'code',
+      primaryKey: "code",
     });
 
-    collection.appendItem({ code: 404, status: 'Not Found' });
-    collection.patchItem(404, { status: 'Found' });
+    collection.appendItem({ code: 404, status: "Not Found" });
+    collection.patchItem(404, { status: "Found" });
 
-    expect(collection.getItem(404)?.status).toBe('Found');
+    expect(collection.getItem(404)?.status).toBe("Found");
   });
 
-  it('should patch item with bigint key', () => {
+  it("should patch item with bigint key", () => {
     const collection = new Collection<
-      'pk',
+      "pk",
       bigint,
       { pk: bigint; info: string }
     >({
-      primaryKey: 'pk',
+      primaryKey: "pk",
     });
 
     const key = BigInt(1122334455);
-    collection.appendItem({ pk: key, info: 'Old' });
-    collection.patchItem(key, { info: 'Updated' });
+    collection.appendItem({ pk: key, info: "Old" });
+    collection.patchItem(key, { info: "Updated" });
 
-    expect(collection.getItem(key)?.info).toBe('Updated');
+    expect(collection.getItem(key)?.info).toBe("Updated");
   });
 
-  it('should insert item before/after with string key', () => {
+  it("should insert item before/after with string key", () => {
     const collection = new Collection<
-      'slug',
+      "slug",
       string,
       { slug: string; title: string }
     >({
-      primaryKey: 'slug',
+      primaryKey: "slug",
     });
 
-    collection.appendItem({ slug: 'first', title: 'First' });
-    collection.insertItemAfter('first', { slug: 'second', title: 'Second' });
+    collection.appendItem({ slug: "first", title: "First" });
+    collection.insertItemAfter("first", { slug: "second", title: "Second" });
 
     const keys = [...collection].map((i) => i.slug);
-    expect(keys).toEqual(['first', 'second']);
+    expect(keys).toEqual(["first", "second"]);
   });
 
-  it('should insert item before/after with number key', () => {
+  it("should insert item before/after with number key", () => {
     const collection = new Collection<
-      'num',
+      "num",
       number,
       { num: number; value: string }
     >({
-      primaryKey: 'num',
+      primaryKey: "num",
     });
 
-    collection.appendItem({ num: 1, value: 'One' });
-    collection.insertItemAfter(1, { num: 2, value: 'Two' });
+    collection.appendItem({ num: 1, value: "One" });
+    collection.insertItemAfter(1, { num: 2, value: "Two" });
 
     const keys = [...collection].map((i) => i.num);
     expect(keys).toEqual([1, 2]);
   });
 
-  it('should insert item before/after with bigint key', () => {
+  it("should insert item before/after with bigint key", () => {
     const collection = new Collection<
-      'key',
+      "key",
       bigint,
       { key: bigint; name: string }
     >({
-      primaryKey: 'key',
+      primaryKey: "key",
     });
 
     const k1 = BigInt(100);
     const k2 = BigInt(101);
 
-    collection.appendItem({ key: k1, name: 'First' });
-    collection.insertItemAfter(k1, { key: k2, name: 'Second' });
+    collection.appendItem({ key: k1, name: "First" });
+    collection.insertItemAfter(k1, { key: k2, name: "Second" });
 
     const keys = [...collection].map((i) => i.key);
     expect(keys).toEqual([k1, k2]);
   });
 });
 
-describe('Collection - replacing items with same primaryKey (strict inline types)', () => {
-  it('appendItem should replace existing item (string key)', () => {
+describe("Collection - replacing items with same primaryKey (strict inline types)", () => {
+  it("appendItem should replace existing item (string key)", () => {
     const collection = new Collection<
-      'slug',
+      "slug",
       string,
       { slug: string; title: string }
     >({
-      primaryKey: 'slug',
+      primaryKey: "slug",
     });
 
-    collection.appendItem({ slug: 'one', title: 'First' });
-    collection.appendItem({ slug: 'one', title: 'Updated First' });
+    collection.appendItem({ slug: "one", title: "First" });
+    collection.appendItem({ slug: "one", title: "Updated First" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('one')?.title).toBe('Updated First');
+    expect(collection.getItem("one")?.title).toBe("Updated First");
   });
 
-  it('prependItem should replace existing item (string key)', () => {
+  it("prependItem should replace existing item (string key)", () => {
     const collection = new Collection<
-      'slug',
+      "slug",
       string,
       { slug: string; title: string }
     >({
-      primaryKey: 'slug',
+      primaryKey: "slug",
     });
 
-    collection.appendItem({ slug: 'one', title: 'First' });
-    collection.prependItem({ slug: 'one', title: 'Prepended' });
+    collection.appendItem({ slug: "one", title: "First" });
+    collection.prependItem({ slug: "one", title: "Prepended" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('one')?.title).toBe('Prepended');
+    expect(collection.getItem("one")?.title).toBe("Prepended");
   });
 
-  it('appendItemAt should replace existing item (string key)', () => {
+  it("appendItemAt should replace existing item (string key)", () => {
     const collection = new Collection<
-      'slug',
+      "slug",
       string,
       { slug: string; title: string }
     >({
-      primaryKey: 'slug',
+      primaryKey: "slug",
     });
 
-    collection.appendItem({ slug: 'one', title: 'First' });
-    collection.appendItemAt({ slug: 'one', title: 'Inserted' }, 0);
+    collection.appendItem({ slug: "one", title: "First" });
+    collection.appendItemAt({ slug: "one", title: "Inserted" }, 0);
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('one')?.title).toBe('Inserted');
+    expect(collection.getItem("one")?.title).toBe("Inserted");
   });
 
-  it('insertItemBefore should replace existing item (string key)', () => {
+  it("insertItemBefore should replace existing item (string key)", () => {
     const collection = new Collection<
-      'slug',
+      "slug",
       string,
       { slug: string; title: string }
     >({
-      primaryKey: 'slug',
+      primaryKey: "slug",
     });
 
-    collection.appendItem({ slug: 'one', title: 'First' });
-    collection.insertItemBefore('one', { slug: 'one', title: 'Before' });
+    collection.appendItem({ slug: "one", title: "First" });
+    collection.insertItemBefore("one", { slug: "one", title: "Before" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('one')?.title).toBe('Before');
+    expect(collection.getItem("one")?.title).toBe("Before");
   });
 
-  it('insertItemAfter should replace existing item (string key)', () => {
+  it("insertItemAfter should replace existing item (string key)", () => {
     const collection = new Collection<
-      'slug',
+      "slug",
       string,
       { slug: string; title: string }
     >({
-      primaryKey: 'slug',
+      primaryKey: "slug",
     });
 
-    collection.appendItem({ slug: 'one', title: 'First' });
-    collection.insertItemAfter('one', { slug: 'one', title: 'After' });
+    collection.appendItem({ slug: "one", title: "First" });
+    collection.insertItemAfter("one", { slug: "one", title: "After" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('one')?.title).toBe('After');
+    expect(collection.getItem("one")?.title).toBe("After");
   });
 
-  it('replaceItem should replace existing item (string key)', () => {
+  it("replaceItem should replace existing item (string key)", () => {
     const collection = new Collection<
-      'slug',
+      "slug",
       string,
       { slug: string; title: string }
     >({
-      primaryKey: 'slug',
+      primaryKey: "slug",
     });
 
-    collection.appendItem({ slug: 'one', title: 'First' });
-    collection.replaceItem('one', { slug: 'one', title: 'Replaced' });
+    collection.appendItem({ slug: "one", title: "First" });
+    collection.replaceItem("one", { slug: "one", title: "Replaced" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('one')?.title).toBe('Replaced');
+    expect(collection.getItem("one")?.title).toBe("Replaced");
   });
 
-  it('appendItem should replace existing item (number key)', () => {
+  it("appendItem should replace existing item (number key)", () => {
     const collection = new Collection<
-      'id',
+      "id",
       number,
       { id: number; value: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 1, value: 'A' });
-    collection.appendItem({ id: 1, value: 'B' });
+    collection.appendItem({ id: 1, value: "A" });
+    collection.appendItem({ id: 1, value: "B" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem(1)?.value).toBe('B');
+    expect(collection.getItem(1)?.value).toBe("B");
   });
 
-  it('insertItemBefore should replace existing item (number key)', () => {
+  it("insertItemBefore should replace existing item (number key)", () => {
     const collection = new Collection<
-      'id',
+      "id",
       number,
       { id: number; value: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 2, value: 'Old' });
-    collection.insertItemBefore(2, { id: 2, value: 'New' });
+    collection.appendItem({ id: 2, value: "Old" });
+    collection.insertItemBefore(2, { id: 2, value: "New" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem(2)?.value).toBe('New');
+    expect(collection.getItem(2)?.value).toBe("New");
   });
 
-  it('insertItemAfter should replace existing item (number key)', () => {
+  it("insertItemAfter should replace existing item (number key)", () => {
     const collection = new Collection<
-      'id',
+      "id",
       number,
       { id: number; value: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 3, value: 'Old' });
-    collection.insertItemAfter(3, { id: 3, value: 'New' });
+    collection.appendItem({ id: 3, value: "Old" });
+    collection.insertItemAfter(3, { id: 3, value: "New" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem(3)?.value).toBe('New');
+    expect(collection.getItem(3)?.value).toBe("New");
   });
 
-  it('replaceItem should replace existing item (number key)', () => {
+  it("replaceItem should replace existing item (number key)", () => {
     const collection = new Collection<
-      'id',
+      "id",
       number,
       { id: number; name: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 99, name: 'Old Name' });
-    collection.replaceItem(99, { id: 99, name: 'New Name' });
+    collection.appendItem({ id: 99, name: "Old Name" });
+    collection.replaceItem(99, { id: 99, name: "New Name" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem(99)?.name).toBe('New Name');
+    expect(collection.getItem(99)?.name).toBe("New Name");
   });
 
-  it('appendItem should replace existing item (bigint key)', () => {
+  it("appendItem should replace existing item (bigint key)", () => {
     const collection = new Collection<
-      'key',
+      "key",
       bigint,
       { key: bigint; info: string }
     >({
-      primaryKey: 'key',
+      primaryKey: "key",
     });
 
     const bigKey = BigInt(1000);
 
-    collection.appendItem({ key: bigKey, info: 'Old Info' });
-    collection.appendItem({ key: bigKey, info: 'Updated Info' });
+    collection.appendItem({ key: bigKey, info: "Old Info" });
+    collection.appendItem({ key: bigKey, info: "Updated Info" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem(bigKey)?.info).toBe('Updated Info');
+    expect(collection.getItem(bigKey)?.info).toBe("Updated Info");
   });
 
-  it('insertItemBefore should replace existing item (bigint key)', () => {
+  it("insertItemBefore should replace existing item (bigint key)", () => {
     const collection = new Collection<
-      'key',
+      "key",
       bigint,
       { key: bigint; data: string }
     >({
-      primaryKey: 'key',
+      primaryKey: "key",
     });
 
     const bigKey = BigInt(5555);
 
-    collection.appendItem({ key: bigKey, data: 'Old Data' });
-    collection.insertItemBefore(bigKey, { key: bigKey, data: 'New Data' });
+    collection.appendItem({ key: bigKey, data: "Old Data" });
+    collection.insertItemBefore(bigKey, { key: bigKey, data: "New Data" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem(bigKey)?.data).toBe('New Data');
+    expect(collection.getItem(bigKey)?.data).toBe("New Data");
   });
 
-  it('insertItemAfter should replace existing item (bigint key)', () => {
+  it("insertItemAfter should replace existing item (bigint key)", () => {
     const collection = new Collection<
-      'key',
+      "key",
       bigint,
       { key: bigint; data: string }
     >({
-      primaryKey: 'key',
+      primaryKey: "key",
     });
 
     const bigKey = BigInt(9999);
 
-    collection.appendItem({ key: bigKey, data: 'Old Version' });
-    collection.insertItemAfter(bigKey, { key: bigKey, data: 'New Version' });
+    collection.appendItem({ key: bigKey, data: "Old Version" });
+    collection.insertItemAfter(bigKey, { key: bigKey, data: "New Version" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem(bigKey)?.data).toBe('New Version');
+    expect(collection.getItem(bigKey)?.data).toBe("New Version");
   });
 
-  it('replaceItem should replace existing item (bigint key)', () => {
+  it("replaceItem should replace existing item (bigint key)", () => {
     const collection = new Collection<
-      'pk',
+      "pk",
       bigint,
       { pk: bigint; name: string }
     >({
-      primaryKey: 'pk',
+      primaryKey: "pk",
     });
 
-    const bigKey = BigInt('1234567890123456789');
+    const bigKey = BigInt("1234567890123456789");
 
-    collection.appendItem({ pk: bigKey, name: 'Old Name' });
-    collection.replaceItem(bigKey, { pk: bigKey, name: 'Updated Name' });
+    collection.appendItem({ pk: bigKey, name: "Old Name" });
+    collection.replaceItem(bigKey, { pk: bigKey, name: "Updated Name" });
 
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem(bigKey)?.name).toBe('Updated Name');
+    expect(collection.getItem(bigKey)?.name).toBe("Updated Name");
   });
 });
 
-describe('Collection - removeItem, patchItem, hasItem behavior', () => {
+describe("Collection - removeItem, patchItem, hasItem behavior", () => {
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -1317,28 +1317,28 @@ describe('Collection - removeItem, patchItem, hasItem behavior', () => {
   });
 
   // --- removeItem tests ---
-  it('removeItem should return false if item does not exist (string key)', () => {
+  it("removeItem should return false if item does not exist (string key)", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; name: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    const result = collection.removeItem('not-exist');
+    const result = collection.removeItem("not-exist");
 
     expect(result).toBe(false);
     expect(collection.numItems).toBe(0);
   });
 
-  it('removeItem should return false if item does not exist (number key)', () => {
+  it("removeItem should return false if item does not exist (number key)", () => {
     const collection = new Collection<
-      'id',
+      "id",
       number,
       { id: number; name: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const result = collection.removeItem(999);
@@ -1347,13 +1347,13 @@ describe('Collection - removeItem, patchItem, hasItem behavior', () => {
     expect(collection.numItems).toBe(0);
   });
 
-  it('removeItem should return false if item does not exist (bigint key)', () => {
+  it("removeItem should return false if item does not exist (bigint key)", () => {
     const collection = new Collection<
-      'pk',
+      "pk",
       bigint,
       { pk: bigint; name: string }
     >({
-      primaryKey: 'pk',
+      primaryKey: "pk",
     });
 
     const result = collection.removeItem(BigInt(123456789));
@@ -1363,1017 +1363,1017 @@ describe('Collection - removeItem, patchItem, hasItem behavior', () => {
   });
 
   // --- patchItem tests ---
-  it('patchItem should update existing item (string key)', () => {
+  it("patchItem should update existing item (string key)", () => {
     const collection = new Collection<
-      'slug',
+      "slug",
       string,
       { slug: string; title: string }
     >({
-      primaryKey: 'slug',
+      primaryKey: "slug",
     });
 
-    collection.appendItem({ slug: 'post-1', title: 'Original' });
-    const result = collection.patchItem('post-1', { title: 'Updated' });
+    collection.appendItem({ slug: "post-1", title: "Original" });
+    const result = collection.patchItem("post-1", { title: "Updated" });
 
     expect(result).toBe(true);
-    expect(collection.getItem('post-1')?.title).toBe('Updated');
+    expect(collection.getItem("post-1")?.title).toBe("Updated");
   });
 
-  it('patchItem should update existing item (number key)', () => {
+  it("patchItem should update existing item (number key)", () => {
     const collection = new Collection<
-      'id',
+      "id",
       number,
       { id: number; value: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 1, value: 'One' });
-    const result = collection.patchItem(1, { value: 'Updated One' });
+    collection.appendItem({ id: 1, value: "One" });
+    const result = collection.patchItem(1, { value: "Updated One" });
 
     expect(result).toBe(true);
-    expect(collection.getItem(1)?.value).toBe('Updated One');
+    expect(collection.getItem(1)?.value).toBe("Updated One");
   });
 
-  it('patchItem should update existing item (bigint key)', () => {
+  it("patchItem should update existing item (bigint key)", () => {
     const collection = new Collection<
-      'key',
+      "key",
       bigint,
       { key: bigint; info: string }
     >({
-      primaryKey: 'key',
+      primaryKey: "key",
     });
 
     const key = BigInt(100);
-    collection.appendItem({ key, info: 'Before' });
-    const result = collection.patchItem(key, { info: 'After' });
+    collection.appendItem({ key, info: "Before" });
+    const result = collection.patchItem(key, { info: "After" });
 
     expect(result).toBe(true);
-    expect(collection.getItem(key)?.info).toBe('After');
+    expect(collection.getItem(key)?.info).toBe("After");
   });
 
-  it('patchItem should return false if item does not exist (string key)', () => {
+  it("patchItem should return false if item does not exist (string key)", () => {
     const collection = new Collection<
-      'slug',
+      "slug",
       string,
       { slug: string; title: string }
     >({
-      primaryKey: 'slug',
+      primaryKey: "slug",
     });
 
-    const result = collection.patchItem('non-existent', {
-      title: 'Does not matter',
+    const result = collection.patchItem("non-existent", {
+      title: "Does not matter",
     });
 
     expect(result).toBe(false);
   });
 
-  it('patchItem should return false if item does not exist (number key)', () => {
+  it("patchItem should return false if item does not exist (number key)", () => {
     const collection = new Collection<
-      'id',
+      "id",
       number,
       { id: number; name: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    const result = collection.patchItem(123, { name: 'No Name' });
+    const result = collection.patchItem(123, { name: "No Name" });
 
     expect(result).toBe(false);
   });
 
-  it('patchItem should NOT change primaryKey (string key)', () => {
+  it("patchItem should NOT change primaryKey (string key)", () => {
     const collection = new Collection<
-      'slug',
+      "slug",
       string,
       { slug: string; title: string }
     >({
-      primaryKey: 'slug',
+      primaryKey: "slug",
     });
 
-    collection.appendItem({ slug: 'initial', title: 'Original' });
+    collection.appendItem({ slug: "initial", title: "Original" });
     // @ts-expect-error intentionally trying to override primary key for test
-    collection.patchItem('initial', { slug: 'new-slug', title: 'Updated' });
+    collection.patchItem("initial", { slug: "new-slug", title: "Updated" });
 
-    expect(collection.hasItem('initial')).toBe(true);
-    expect(collection.getItem('initial')?.title).toBe('Updated');
-    expect(collection.hasItem('new-slug')).toBe(false);
+    expect(collection.hasItem("initial")).toBe(true);
+    expect(collection.getItem("initial")?.title).toBe("Updated");
+    expect(collection.hasItem("new-slug")).toBe(false);
   });
 
-  it('patchItem should NOT change primaryKey (number key)', () => {
+  it("patchItem should NOT change primaryKey (number key)", () => {
     const collection = new Collection<
-      'id',
+      "id",
       number,
       { id: number; value: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 1, value: 'Original' });
+    collection.appendItem({ id: 1, value: "Original" });
 
     // @ts-expect-error intentionally trying to override primary key for test
-    collection.patchItem(1, { id: 999, value: 'Changed' });
+    collection.patchItem(1, { id: 999, value: "Changed" });
 
     expect(collection.hasItem(1)).toBe(true);
-    expect(collection.getItem(1)?.value).toBe('Changed');
+    expect(collection.getItem(1)?.value).toBe("Changed");
     expect(collection.hasItem(999)).toBe(false);
   });
 
-  it('patchItem should NOT change primaryKey (bigint key)', () => {
+  it("patchItem should NOT change primaryKey (bigint key)", () => {
     const collection = new Collection<
-      'pk',
+      "pk",
       bigint,
       { pk: bigint; info: string }
     >({
-      primaryKey: 'pk',
+      primaryKey: "pk",
     });
 
     const oldKey = BigInt(111);
     const newKey = BigInt(222);
 
-    collection.appendItem({ pk: oldKey, info: 'Old' });
+    collection.appendItem({ pk: oldKey, info: "Old" });
 
     // @ts-expect-error intentionally trying to override primary key for test
-    collection.patchItem(oldKey, { pk: newKey, info: 'New Info' });
+    collection.patchItem(oldKey, { pk: newKey, info: "New Info" });
 
     expect(collection.hasItem(oldKey)).toBe(true);
-    expect(collection.getItem(oldKey)?.info).toBe('New Info');
+    expect(collection.getItem(oldKey)?.info).toBe("New Info");
     expect(collection.hasItem(newKey)).toBe(false);
   });
 
   // --- hasItem tests ---
-  it('hasItem should return true if item exists', () => {
+  it("hasItem should return true if item exists", () => {
     const collection = new Collection<
-      'slug',
+      "slug",
       string,
       { slug: string; title: string }
     >({
-      primaryKey: 'slug',
+      primaryKey: "slug",
     });
 
-    collection.appendItem({ slug: 'exists', title: 'Hello' });
+    collection.appendItem({ slug: "exists", title: "Hello" });
 
-    expect(collection.hasItem('exists')).toBe(true);
+    expect(collection.hasItem("exists")).toBe(true);
   });
 
-  it('hasItem should return false if item does not exist', () => {
+  it("hasItem should return false if item does not exist", () => {
     const collection = new Collection<
-      'slug',
+      "slug",
       string,
       { slug: string; title: string }
     >({
-      primaryKey: 'slug',
+      primaryKey: "slug",
     });
 
-    expect(collection.hasItem('missing')).toBe(false);
+    expect(collection.hasItem("missing")).toBe(false);
   });
 });
 
-describe('Collection hooks - insert operations', () => {
-  it('appendItem should call insert:before and insert:after', () => {
+describe("Collection hooks - insert operations", () => {
+  it("appendItem should call insert:before and insert:after", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; value: number }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const beforeHook = vi.fn(() => true);
     const afterHook = vi.fn(() => true);
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:before',
+      "insert:before",
       beforeHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:after',
+      "insert:after",
       afterHook,
     );
 
-    collection.appendItem({ id: 'a', value: 1 });
+    collection.appendItem({ id: "a", value: 1 });
 
     expect(beforeHook).toHaveBeenCalledTimes(1);
     expect(afterHook).toHaveBeenCalledTimes(1);
   });
 
-  it('appendItem should not proceed if insert:before returns false', () => {
+  it("appendItem should not proceed if insert:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; value: number }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:before',
+      "insert:before",
       () => false,
     );
 
-    const result = collection.appendItem({ id: 'a', value: 1 });
+    const result = collection.appendItem({ id: "a", value: 1 });
 
     expect(result).toBe(false);
     expect(collection.numItems).toBe(0);
   });
 
-  it('appendItem should not call insert:after if insert:before returns false', () => {
+  it("appendItem should not call insert:after if insert:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; value: number }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const afterHook = vi.fn();
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:before',
+      "insert:before",
       () => false,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:after',
+      "insert:after",
       afterHook,
     );
 
-    collection.appendItem({ id: 'a', value: 1 });
+    collection.appendItem({ id: "a", value: 1 });
 
     expect(afterHook).not.toHaveBeenCalled();
   });
 
-  it('appendItemAt should call insert:before and insert:after', () => {
+  it("appendItemAt should call insert:before and insert:after", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; value: number }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const beforeHook = vi.fn(() => true);
     const afterHook = vi.fn(() => true);
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:before',
+      "insert:before",
       beforeHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:after',
+      "insert:after",
       afterHook,
     );
 
-    collection.appendItemAt({ id: 'b', value: 2 }, 0);
+    collection.appendItemAt({ id: "b", value: 2 }, 0);
 
     expect(beforeHook).toHaveBeenCalledTimes(1);
     expect(afterHook).toHaveBeenCalledTimes(1);
   });
 
-  it('prependItem should call insert:before and insert:after', () => {
+  it("prependItem should call insert:before and insert:after", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; name: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const beforeHook = vi.fn(() => true);
     const afterHook = vi.fn(() => true);
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:before',
+      "insert:before",
       beforeHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:after',
+      "insert:after",
       afterHook,
     );
 
-    collection.prependItem({ id: 'start', name: 'zero' });
+    collection.prependItem({ id: "start", name: "zero" });
 
     expect(beforeHook).toHaveBeenCalledTimes(1);
     expect(afterHook).toHaveBeenCalledTimes(1);
   });
 
-  it('insertItemBefore should call insert:before and insert:after', () => {
+  it("insertItemBefore should call insert:before and insert:after", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; title: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'base', title: 'base' });
+    collection.appendItem({ id: "base", title: "base" });
 
     const beforeHook = vi.fn(() => true);
     const afterHook = vi.fn(() => true);
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:before',
+      "insert:before",
       beforeHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:after',
+      "insert:after",
       afterHook,
     );
 
-    collection.insertItemBefore('base', { id: 'before', title: 'before' });
+    collection.insertItemBefore("base", { id: "before", title: "before" });
 
     expect(beforeHook).toHaveBeenCalledTimes(1);
     expect(afterHook).toHaveBeenCalledTimes(1);
   });
 
-  it('insertItemAfter should call insert:before and insert:after', () => {
+  it("insertItemAfter should call insert:before and insert:after", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; text: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'base', text: 'base' });
+    collection.appendItem({ id: "base", text: "base" });
 
     const beforeHook = vi.fn(() => true);
     const afterHook = vi.fn(() => true);
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:before',
+      "insert:before",
       beforeHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:after',
+      "insert:after",
       afterHook,
     );
 
-    collection.insertItemAfter('base', { id: 'after', text: 'after' });
+    collection.insertItemAfter("base", { id: "after", text: "after" });
 
     expect(beforeHook).toHaveBeenCalledTimes(1);
     expect(afterHook).toHaveBeenCalledTimes(1);
   });
 
-  it('insertItemBefore should not proceed if insert:before returns false', () => {
+  it("insertItemBefore should not proceed if insert:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; content: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'first', content: 'first' });
+    collection.appendItem({ id: "first", content: "first" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:before',
+      "insert:before",
       () => false,
     );
 
-    const result = collection.insertItemBefore('first', {
-      id: 'new',
-      content: 'new',
+    const result = collection.insertItemBefore("first", {
+      id: "new",
+      content: "new",
     });
 
     expect(result).toBe(false);
     expect(collection.numItems).toBe(1); // still only 'first'
   });
 
-  it('insertItemAfter should not proceed if insert:before returns false', () => {
+  it("insertItemAfter should not proceed if insert:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; content: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'first', content: 'first' });
+    collection.appendItem({ id: "first", content: "first" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:before',
+      "insert:before",
       () => false,
     );
 
-    const result = collection.insertItemAfter('first', {
-      id: 'new',
-      content: 'new',
+    const result = collection.insertItemAfter("first", {
+      id: "new",
+      content: "new",
     });
 
     expect(result).toBe(false);
     expect(collection.numItems).toBe(1);
   });
 
-  it('appendItem should trigger update event after successful insert', () => {
+  it("appendItem should trigger update event after successful insert", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; value: number }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const updateListener = vi.fn();
-    collection.addEventListener('update', updateListener);
+    collection.addEventListener("update", updateListener);
 
-    collection.appendItem({ id: 'a', value: 123 });
+    collection.appendItem({ id: "a", value: 123 });
 
     expect(updateListener).toHaveBeenCalledOnce();
     expect(updateListener.mock.lastCall![0].detail).toEqual([
-      { id: 'a', value: 123 },
+      { id: "a", value: 123 },
     ]);
   });
 
-  it('appendItem should NOT trigger update event if insert:before returns false', () => {
+  it("appendItem should NOT trigger update event if insert:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; value: number }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const updateListener = vi.fn();
-    collection.addEventListener('update', updateListener);
+    collection.addEventListener("update", updateListener);
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:before',
+      "insert:before",
       () => false,
     );
 
-    collection.appendItem({ id: 'b', value: 456 });
+    collection.appendItem({ id: "b", value: 456 });
 
     expect(updateListener).not.toHaveBeenCalled();
   });
 });
 
-describe('Collection hooks - patchItem', () => {
-  it('patch:before should be called once during patchItem', () => {
+describe("Collection hooks - patchItem", () => {
+  it("patch:before should be called once during patchItem", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; value: number }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const beforeHook = vi.fn(() => true);
 
-    collection.appendItem({ id: 'item1', value: 10 });
+    collection.appendItem({ id: "item1", value: 10 });
     collection[$CollectionHookDispatcherSymbol].register(
-      'patch:before',
+      "patch:before",
       beforeHook,
     );
 
-    collection.patchItem('item1', { value: 20 });
+    collection.patchItem("item1", { value: 20 });
 
     expect(beforeHook).toHaveBeenCalledTimes(1);
   });
 
-  it('patch:after should be called once during patchItem', () => {
+  it("patch:after should be called once during patchItem", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; value: number }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const afterHook = vi.fn(() => true);
 
-    collection.appendItem({ id: 'item2', value: 100 });
+    collection.appendItem({ id: "item2", value: 100 });
     collection[$CollectionHookDispatcherSymbol].register(
-      'patch:after',
+      "patch:after",
       afterHook,
     );
 
-    collection.patchItem('item2', { value: 200 });
+    collection.patchItem("item2", { value: 200 });
 
     expect(afterHook).toHaveBeenCalledTimes(1);
   });
 
-  it('patch:before should receive correct item data', () => {
+  it("patch:before should receive correct item data", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; label: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const beforeHook = vi.fn(() => true);
 
-    collection.appendItem({ id: 'label1', label: 'A' });
+    collection.appendItem({ id: "label1", label: "A" });
     collection[$CollectionHookDispatcherSymbol].register(
-      'patch:before',
+      "patch:before",
       beforeHook,
     );
 
-    collection.patchItem('label1', { label: 'B' });
+    collection.patchItem("label1", { label: "B" });
 
     expect(beforeHook).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        item: { id: 'label1', label: 'B' },
+        item: { id: "label1", label: "B" },
         index: 0,
-        meta: expect.objectContaining({ primaryKey: 'id' }),
+        meta: expect.objectContaining({ primaryKey: "id" }),
       }),
     );
   });
 
-  it('patch:after should receive correct item data', () => {
+  it("patch:after should receive correct item data", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; name: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const afterHook = vi.fn(() => true);
 
-    collection.appendItem({ id: 'user', name: 'Original' });
+    collection.appendItem({ id: "user", name: "Original" });
     collection[$CollectionHookDispatcherSymbol].register(
-      'patch:after',
+      "patch:after",
       afterHook,
     );
 
-    collection.patchItem('user', { name: 'Updated' });
+    collection.patchItem("user", { name: "Updated" });
 
     expect(afterHook).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        item: { id: 'user', name: 'Updated' },
+        item: { id: "user", name: "Updated" },
         index: 0,
-        meta: expect.objectContaining({ primaryKey: 'id' }),
+        meta: expect.objectContaining({ primaryKey: "id" }),
       }),
     );
   });
 
-  it('patchItem should NOT call patch:after if patch:before returns false', () => {
+  it("patchItem should NOT call patch:after if patch:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; data: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const afterHook = vi.fn();
     const beforeHook = vi.fn(() => false);
 
-    collection.appendItem({ id: 'doc', data: 'Doc1' });
+    collection.appendItem({ id: "doc", data: "Doc1" });
     collection[$CollectionHookDispatcherSymbol].register(
-      'patch:before',
+      "patch:before",
       beforeHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'patch:after',
+      "patch:after",
       afterHook,
     );
 
-    collection.patchItem('doc', { data: 'Doc2' });
+    collection.patchItem("doc", { data: "Doc2" });
 
     expect(afterHook).not.toHaveBeenCalled();
   });
 
-  it('patchItem should block patching if patch:before returns false', () => {
+  it("patchItem should block patching if patch:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; tag: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'tag1', tag: 'v1' });
+    collection.appendItem({ id: "tag1", tag: "v1" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'patch:before',
+      "patch:before",
       () => false,
     );
 
-    const result = collection.patchItem('tag1', { tag: 'v2' });
+    const result = collection.patchItem("tag1", { tag: "v2" });
 
     expect(result).toBe(false);
-    expect(collection.getItem('tag1')?.tag).toBe('v1');
+    expect(collection.getItem("tag1")?.tag).toBe("v1");
   });
 
-  it('patchItem should update the item if patch:before returns true', () => {
+  it("patchItem should update the item if patch:before returns true", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; title: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'post1', title: 'Old Title' });
+    collection.appendItem({ id: "post1", title: "Old Title" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'patch:before',
+      "patch:before",
       () => true,
     );
 
-    const result = collection.patchItem('post1', { title: 'New Title' });
+    const result = collection.patchItem("post1", { title: "New Title" });
 
     expect(result).toBe(true);
-    expect(collection.getItem('post1')?.title).toBe('New Title');
+    expect(collection.getItem("post1")?.title).toBe("New Title");
   });
 
-  it('patch:before should be called before patch happens', () => {
+  it("patch:before should be called before patch happens", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; label: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const spy = vi.fn(() => {
-      expect(collection.getItem('item1')?.label).toBe('old');
+      expect(collection.getItem("item1")?.label).toBe("old");
       return true;
     });
 
-    collection.appendItem({ id: 'item1', label: 'old' });
+    collection.appendItem({ id: "item1", label: "old" });
 
-    collection[$CollectionHookDispatcherSymbol].register('patch:before', spy);
+    collection[$CollectionHookDispatcherSymbol].register("patch:before", spy);
 
-    collection.patchItem('item1', { label: 'new' });
+    collection.patchItem("item1", { label: "new" });
 
     expect(spy).toHaveBeenCalledOnce();
   });
 
-  it('patch:after should be called after patch happens', () => {
+  it("patch:after should be called after patch happens", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; label: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const afterSpy = vi.fn(() => {
-      expect(collection.getItem('item2')?.label).toBe('new');
+      expect(collection.getItem("item2")?.label).toBe("new");
     });
 
-    collection.appendItem({ id: 'item2', label: 'old' });
+    collection.appendItem({ id: "item2", label: "old" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'patch:after',
+      "patch:after",
       afterSpy,
     );
 
-    collection.patchItem('item2', { label: 'new' });
+    collection.patchItem("item2", { label: "new" });
 
     expect(afterSpy).toHaveBeenCalledOnce();
   });
 
-  it('patchItem should not crash if no hooks are registered', () => {
+  it("patchItem should not crash if no hooks are registered", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; data: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'naked', data: 'clean' });
+    collection.appendItem({ id: "naked", data: "clean" });
 
-    const result = collection.patchItem('naked', { data: 'dirty' });
+    const result = collection.patchItem("naked", { data: "dirty" });
 
     expect(result).toBe(true);
-    expect(collection.getItem('naked')?.data).toBe('dirty');
+    expect(collection.getItem("naked")?.data).toBe("dirty");
   });
 
-  it('patchItem should trigger onUpdate after patch:after', () => {
+  it("patchItem should trigger onUpdate after patch:after", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; name: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const events: string[] = [];
 
-    collection.appendItem({ id: 'user1', name: 'A' });
+    collection.appendItem({ id: "user1", name: "A" });
 
-    collection[$CollectionHookDispatcherSymbol].register('patch:after', () => {
-      events.push('after');
+    collection[$CollectionHookDispatcherSymbol].register("patch:after", () => {
+      events.push("after");
     });
 
     collection.onUpdate = () => {
-      events.push('update');
+      events.push("update");
     };
 
-    collection.patchItem('user1', { name: 'B' });
+    collection.patchItem("user1", { name: "B" });
 
-    expect(events).toEqual(['after', 'update']);
+    expect(events).toEqual(["after", "update"]);
   });
 
-  it('patchItem should NOT trigger onUpdate if patch:before returns false', () => {
+  it("patchItem should NOT trigger onUpdate if patch:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; label: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const onUpdate = vi.fn();
 
-    collection.appendItem({ id: 'doc1', label: 'Old' });
+    collection.appendItem({ id: "doc1", label: "Old" });
     collection.onUpdate = onUpdate;
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'patch:before',
+      "patch:before",
       () => false,
     );
 
-    collection.patchItem('doc1', { label: 'New' });
+    collection.patchItem("doc1", { label: "New" });
 
     expect(onUpdate).not.toHaveBeenCalled();
   });
 
-  it('patchItem should allow mutating item inside patch:after hook', () => {
+  it("patchItem should allow mutating item inside patch:after hook", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; status: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'task1', status: 'pending' });
+    collection.appendItem({ id: "task1", status: "pending" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'patch:after',
+      "patch:after",
       ({ item }) => {
-        item.status = 'mutated';
+        item.status = "mutated";
       },
     );
 
-    collection.patchItem('task1', { status: 'patched' });
+    collection.patchItem("task1", { status: "patched" });
 
-    expect(collection.getItem('task1')).toEqual({
-      id: 'task1',
-      status: 'mutated',
+    expect(collection.getItem("task1")).toEqual({
+      id: "task1",
+      status: "mutated",
     });
   });
 });
 
-describe('Collection hooks - removeItem operations', () => {
-  it('removeItem should call remove:before and remove:after', () => {
+describe("Collection hooks - removeItem operations", () => {
+  it("removeItem should call remove:before and remove:after", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; name: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const beforeHook = vi.fn(() => true);
     const afterHook = vi.fn(() => true);
 
-    collection.appendItem({ id: 'user1', name: 'John' });
+    collection.appendItem({ id: "user1", name: "John" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'remove:before',
+      "remove:before",
       beforeHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'remove:after',
+      "remove:after",
       afterHook,
     );
 
-    collection.removeItem('user1');
+    collection.removeItem("user1");
 
     expect(beforeHook).toHaveBeenCalledOnce();
     expect(afterHook).toHaveBeenCalledOnce();
   });
 
-  it('removeItem should NOT proceed if remove:before returns false', () => {
+  it("removeItem should NOT proceed if remove:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; label: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'label1', label: 'test' });
+    collection.appendItem({ id: "label1", label: "test" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'remove:before',
+      "remove:before",
       () => false,
     );
 
-    const result = collection.removeItem('label1');
+    const result = collection.removeItem("label1");
 
     expect(result).toBe(false);
-    expect(collection.hasItem('label1')).toBe(true);
+    expect(collection.hasItem("label1")).toBe(true);
   });
 
-  it('removeItem should NOT call remove:after if remove:before returns false', () => {
+  it("removeItem should NOT call remove:after if remove:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; value: number }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const afterHook = vi.fn();
 
-    collection.appendItem({ id: 'val1', value: 42 });
+    collection.appendItem({ id: "val1", value: 42 });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'remove:before',
+      "remove:before",
       () => false,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'remove:after',
+      "remove:after",
       afterHook,
     );
 
-    collection.removeItem('val1');
+    collection.removeItem("val1");
 
     expect(afterHook).not.toHaveBeenCalled();
   });
 
-  it('removeItem should trigger update event after successful remove', () => {
+  it("removeItem should trigger update event after successful remove", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; text: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const updateListener = vi.fn();
 
-    collection.appendItem({ id: 'note1', text: 'todo' });
-    collection.addEventListener('update', updateListener);
+    collection.appendItem({ id: "note1", text: "todo" });
+    collection.addEventListener("update", updateListener);
 
-    collection.removeItem('note1');
+    collection.removeItem("note1");
 
     expect(updateListener).toHaveBeenCalledOnce();
   });
 
-  it('removeItem should NOT trigger update if remove:before returns false', () => {
+  it("removeItem should NOT trigger update if remove:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; comment: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const updateListener = vi.fn();
 
-    collection.appendItem({ id: 'c1', comment: 'nice' });
-    collection.addEventListener('update', updateListener);
+    collection.appendItem({ id: "c1", comment: "nice" });
+    collection.addEventListener("update", updateListener);
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'remove:before',
+      "remove:before",
       () => false,
     );
 
-    collection.removeItem('c1');
+    collection.removeItem("c1");
 
     expect(updateListener).not.toHaveBeenCalled();
   });
 
-  it('remove:before should receive correct hook parameters', () => {
+  it("remove:before should receive correct hook parameters", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; description: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const beforeHook = vi.fn(() => true);
 
-    collection.appendItem({ id: 'desc1', description: 'desc' });
+    collection.appendItem({ id: "desc1", description: "desc" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'remove:before',
+      "remove:before",
       beforeHook,
     );
 
-    collection.removeItem('desc1');
+    collection.removeItem("desc1");
 
     expect(beforeHook).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        item: { id: 'desc1', description: 'desc' },
+        item: { id: "desc1", description: "desc" },
         index: 0,
-        meta: expect.objectContaining({ primaryKey: 'id' }),
+        meta: expect.objectContaining({ primaryKey: "id" }),
       }),
     );
   });
 
-  it('remove:after should receive correct hook parameters', () => {
+  it("remove:after should receive correct hook parameters", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; tag: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const afterHook = vi.fn(() => true);
 
-    collection.appendItem({ id: 'tag1', tag: 'alpha' });
+    collection.appendItem({ id: "tag1", tag: "alpha" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'remove:after',
+      "remove:after",
       afterHook,
     );
 
-    collection.removeItem('tag1');
+    collection.removeItem("tag1");
 
     expect(afterHook).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        item: { id: 'tag1', tag: 'alpha' },
+        item: { id: "tag1", tag: "alpha" },
         index: 0,
-        meta: expect.objectContaining({ primaryKey: 'id' }),
+        meta: expect.objectContaining({ primaryKey: "id" }),
       }),
     );
   });
 
-  it('removeItem should allow mutating item inside remove:before', () => {
+  it("removeItem should allow mutating item inside remove:before", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; field: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'item1', field: 'initial' });
+    collection.appendItem({ id: "item1", field: "initial" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'remove:before',
+      "remove:before",
       ({ item }) => {
-        item.field = 'mutated';
+        item.field = "mutated";
         return true;
       },
     );
 
-    collection.removeItem('item1');
+    collection.removeItem("item1");
 
     // item is gone from collection but mutation did happen before removal
     // (no errors, safe mutation before removal)
-    expect(collection.getItem('item1')).toBeNull();
+    expect(collection.getItem("item1")).toBeNull();
   });
 
-  it('removeItem should call remove:after before update event', () => {
+  it("removeItem should call remove:after before update event", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; content: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const events: string[] = [];
 
-    collection.appendItem({ id: 'page1', content: 'draft' });
+    collection.appendItem({ id: "page1", content: "draft" });
 
-    collection[$CollectionHookDispatcherSymbol].register('remove:after', () => {
-      events.push('after');
+    collection[$CollectionHookDispatcherSymbol].register("remove:after", () => {
+      events.push("after");
     });
 
     collection.onUpdate = () => {
-      events.push('update');
+      events.push("update");
     };
 
-    collection.removeItem('page1');
+    collection.removeItem("page1");
 
-    expect(events).toEqual(['after', 'update']);
+    expect(events).toEqual(["after", "update"]);
   });
 });
 
-describe('Collection hooks - clear operations', () => {
-  it('clear should call clear:before and clear:after', () => {
+describe("Collection hooks - clear operations", () => {
+  it("clear should call clear:before and clear:after", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; data: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const beforeHook = vi.fn(() => true);
     const afterHook = vi.fn(() => true);
 
-    collection.appendItem({ id: 'd1', data: '1' });
+    collection.appendItem({ id: "d1", data: "1" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:before',
+      "clear:before",
       beforeHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:after',
+      "clear:after",
       afterHook,
     );
 
@@ -2383,19 +2383,19 @@ describe('Collection hooks - clear operations', () => {
     expect(afterHook).toHaveBeenCalledOnce();
   });
 
-  it('clear should not proceed if clear:before returns false', () => {
+  it("clear should not proceed if clear:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; label: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'l1', label: 'A' });
+    collection.appendItem({ id: "l1", label: "A" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:before',
+      "clear:before",
       () => false,
     );
 
@@ -2405,25 +2405,25 @@ describe('Collection hooks - clear operations', () => {
     expect(collection.numItems).toBe(1);
   });
 
-  it('clear should not call clear:after if clear:before returns false', () => {
+  it("clear should not call clear:after if clear:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; name: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const afterHook = vi.fn();
 
-    collection.appendItem({ id: 'n1', name: 'N' });
+    collection.appendItem({ id: "n1", name: "N" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:before',
+      "clear:before",
       () => false,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:after',
+      "clear:after",
       afterHook,
     );
 
@@ -2432,41 +2432,41 @@ describe('Collection hooks - clear operations', () => {
     expect(afterHook).not.toHaveBeenCalled();
   });
 
-  it('clear should trigger update event after successful clear', () => {
+  it("clear should trigger update event after successful clear", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; info: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const updateListener = vi.fn();
 
-    collection.appendItem({ id: 'i1', info: 'I' });
-    collection.addEventListener('update', updateListener);
+    collection.appendItem({ id: "i1", info: "I" });
+    collection.addEventListener("update", updateListener);
 
     collection.clear();
 
     expect(updateListener).toHaveBeenCalledOnce();
   });
 
-  it('clear should NOT trigger update if clear:before returns false', () => {
+  it("clear should NOT trigger update if clear:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; title: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const updateListener = vi.fn();
 
-    collection.appendItem({ id: 't1', title: 'T' });
-    collection.addEventListener('update', updateListener);
+    collection.appendItem({ id: "t1", title: "T" });
+    collection.addEventListener("update", updateListener);
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:before',
+      "clear:before",
       () => false,
     );
 
@@ -2475,21 +2475,21 @@ describe('Collection hooks - clear operations', () => {
     expect(updateListener).not.toHaveBeenCalled();
   });
 
-  it('clear:before should receive correct meta parameter', () => {
+  it("clear:before should receive correct meta parameter", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; type: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const beforeHook = vi.fn(() => true);
 
-    collection.appendItem({ id: 'x1', type: 'X' });
+    collection.appendItem({ id: "x1", type: "X" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:before',
+      "clear:before",
       beforeHook,
     );
 
@@ -2497,26 +2497,26 @@ describe('Collection hooks - clear operations', () => {
 
     expect(beforeHook).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        meta: expect.objectContaining({ primaryKey: 'id' }),
+        meta: expect.objectContaining({ primaryKey: "id" }),
       }),
     );
   });
 
-  it('clear:after should receive correct meta parameter', () => {
+  it("clear:after should receive correct meta parameter", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; group: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const afterHook = vi.fn(() => true);
 
-    collection.appendItem({ id: 'g1', group: 'G' });
+    collection.appendItem({ id: "g1", group: "G" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:after',
+      "clear:after",
       afterHook,
     );
 
@@ -2524,161 +2524,161 @@ describe('Collection hooks - clear operations', () => {
 
     expect(afterHook).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        meta: expect.objectContaining({ primaryKey: 'id' }),
+        meta: expect.objectContaining({ primaryKey: "id" }),
       }),
     );
   });
 
-  it('reset should restore initial items and trigger clear hooks', () => {
+  it("reset should restore initial items and trigger clear hooks", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; note: string }
     >({
-      primaryKey: 'id',
-      initialItems: [{ id: 'init1', note: 'Initial' }],
+      primaryKey: "id",
+      initialItems: [{ id: "init1", note: "Initial" }],
     });
 
     const beforeHook = vi.fn(() => true);
     const afterHook = vi.fn(() => true);
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:before',
+      "clear:before",
       beforeHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:after',
+      "clear:after",
       afterHook,
     );
 
-    collection.appendItem({ id: 'added', note: 'New' });
+    collection.appendItem({ id: "added", note: "New" });
     collection.reset();
 
     expect(beforeHook).toHaveBeenCalled();
     expect(afterHook).toHaveBeenCalled();
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('init1')).not.toBeNull();
+    expect(collection.getItem("init1")).not.toBeNull();
   });
 
-  it('setItems should clear existing items first and trigger clear hooks', () => {
+  it("setItems should clear existing items first and trigger clear hooks", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; prop: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const beforeHook = vi.fn(() => true);
     const afterHook = vi.fn(() => true);
 
-    collection.appendItem({ id: 'p1', prop: 'Old' });
+    collection.appendItem({ id: "p1", prop: "Old" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:before',
+      "clear:before",
       beforeHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:after',
+      "clear:after",
       afterHook,
     );
 
     collection.setItems([
-      { id: 'p2', prop: 'New' },
-      { id: 'p3', prop: 'Newer' },
+      { id: "p2", prop: "New" },
+      { id: "p3", prop: "Newer" },
     ]);
 
     expect(beforeHook).toHaveBeenCalled();
     expect(afterHook).toHaveBeenCalled();
     expect(collection.numItems).toBe(2);
-    expect(collection.getItem('p2')).not.toBeNull();
-    expect(collection.getItem('p3')).not.toBeNull();
+    expect(collection.getItem("p2")).not.toBeNull();
+    expect(collection.getItem("p3")).not.toBeNull();
   });
 
-  it('reset should NOT restore if clear:before blocks clearing', () => {
+  it("reset should NOT restore if clear:before blocks clearing", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; attr: string }
     >({
-      primaryKey: 'id',
-      initialItems: [{ id: 'start', attr: 'origin' }],
+      primaryKey: "id",
+      initialItems: [{ id: "start", attr: "origin" }],
     });
 
-    collection.appendItem({ id: 'temp', attr: 'temporary' });
+    collection.appendItem({ id: "temp", attr: "temporary" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:before',
+      "clear:before",
       () => false,
     );
 
     const result = collection.reset();
 
     expect(result).toBe(false);
-    expect(collection.hasItem('temp')).toBe(true);
+    expect(collection.hasItem("temp")).toBe(true);
   });
 
-  it('setItems should NOT set new items if clear:before blocks clearing', () => {
+  it("setItems should NOT set new items if clear:before blocks clearing", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; asset: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'old1', asset: 'Old Asset' });
+    collection.appendItem({ id: "old1", asset: "Old Asset" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:before',
+      "clear:before",
       () => false,
     );
 
-    const result = collection.setItems([{ id: 'new1', asset: 'New Asset' }]);
+    const result = collection.setItems([{ id: "new1", asset: "New Asset" }]);
 
     expect(result).toBe(false);
-    expect(collection.hasItem('old1')).toBe(true);
-    expect(collection.hasItem('new1')).toBe(false);
+    expect(collection.hasItem("old1")).toBe(true);
+    expect(collection.hasItem("new1")).toBe(false);
   });
 
-  it('clear should call update after clear:after hook', () => {
+  it("clear should call update after clear:after hook", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; content: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const events: string[] = [];
 
-    collection.appendItem({ id: 'doc1', content: 'draft' });
+    collection.appendItem({ id: "doc1", content: "draft" });
 
-    collection[$CollectionHookDispatcherSymbol].register('clear:after', () => {
-      events.push('after');
+    collection[$CollectionHookDispatcherSymbol].register("clear:after", () => {
+      events.push("after");
     });
 
     collection.onUpdate = () => {
-      events.push('update');
+      events.push("update");
     };
 
     collection.clear();
 
-    expect(events).toEqual(['after', 'update']);
+    expect(events).toEqual(["after", "update"]);
   });
 });
 
-describe('Collection hooks - reset and setItems operations', () => {
-  it('reset should call clear and insert hooks for initial items', () => {
+describe("Collection hooks - reset and setItems operations", () => {
+  it("reset should call clear and insert hooks for initial items", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; label: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
       initialItems: [
-        { id: 'a', label: 'A' },
-        { id: 'b', label: 'B' },
+        { id: "a", label: "A" },
+        { id: "b", label: "B" },
       ],
     });
 
@@ -2688,23 +2688,23 @@ describe('Collection hooks - reset and setItems operations', () => {
     const insertAfterHook = vi.fn(() => true);
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:before',
+      "clear:before",
       clearBeforeHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:after',
+      "clear:after",
       clearAfterHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:before',
+      "insert:before",
       insertBeforeHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:after',
+      "insert:after",
       insertAfterHook,
     );
 
-    collection.appendItem({ id: 'temp', label: 'Temp' });
+    collection.appendItem({ id: "temp", label: "Temp" });
 
     collection.reset();
 
@@ -2715,62 +2715,62 @@ describe('Collection hooks - reset and setItems operations', () => {
     expect(collection.numItems).toBe(2);
   });
 
-  it('reset should NOT insert initial items if clear:before returns false', () => {
+  it("reset should NOT insert initial items if clear:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; field: string }
     >({
-      primaryKey: 'id',
-      initialItems: [{ id: 'init', field: 'Start' }],
+      primaryKey: "id",
+      initialItems: [{ id: "init", field: "Start" }],
     });
 
-    collection.appendItem({ id: 'x', field: 'X' });
+    collection.appendItem({ id: "x", field: "X" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:before',
+      "clear:before",
       () => false,
     );
 
     const result = collection.reset();
 
     expect(result).toBe(false);
-    expect(collection.hasItem('x')).toBe(true);
-    expect(collection.hasItem('init')).toBe(true);
+    expect(collection.hasItem("x")).toBe(true);
+    expect(collection.hasItem("init")).toBe(true);
   });
 
-  it('reset should trigger update after insert hooks', () => {
+  it("reset should trigger update after insert hooks", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; prop: string }
     >({
-      primaryKey: 'id',
-      initialItems: [{ id: 'foo', prop: 'bar' }],
+      primaryKey: "id",
+      initialItems: [{ id: "foo", prop: "bar" }],
     });
 
     const events: string[] = [];
 
-    collection[$CollectionHookDispatcherSymbol].register('insert:after', () => {
-      events.push('after');
+    collection[$CollectionHookDispatcherSymbol].register("insert:after", () => {
+      events.push("after");
     });
 
     collection.onUpdate = () => {
-      events.push('update');
+      events.push("update");
     };
 
     collection.reset();
 
-    expect(events).toEqual(['after', 'update']);
+    expect(events).toEqual(["after", "update"]);
   });
 
-  it('setItems should call clear and insert hooks for new items', () => {
+  it("setItems should call clear and insert hooks for new items", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; type: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const clearBeforeHook = vi.fn(() => true);
@@ -2778,28 +2778,28 @@ describe('Collection hooks - reset and setItems operations', () => {
     const insertBeforeHook = vi.fn(() => true);
     const insertAfterHook = vi.fn(() => true);
 
-    collection.appendItem({ id: 'old', type: 'old' });
+    collection.appendItem({ id: "old", type: "old" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:before',
+      "clear:before",
       clearBeforeHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:after',
+      "clear:after",
       clearAfterHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:before',
+      "insert:before",
       insertBeforeHook,
     );
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:after',
+      "insert:after",
       insertAfterHook,
     );
 
     collection.setItems([
-      { id: 'new1', type: 'new' },
-      { id: 'new2', type: 'new' },
+      { id: "new1", type: "new" },
+      { id: "new2", type: "new" },
     ]);
 
     expect(clearBeforeHook).toHaveBeenCalledOnce();
@@ -2809,43 +2809,43 @@ describe('Collection hooks - reset and setItems operations', () => {
     expect(collection.numItems).toBe(2);
   });
 
-  it('setItems should NOT insert items if clear:before returns false', () => {
+  it("setItems should NOT insert items if clear:before returns false", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; desc: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'existing', desc: 'Exist' });
+    collection.appendItem({ id: "existing", desc: "Exist" });
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'clear:before',
+      "clear:before",
       () => false,
     );
 
-    const result = collection.setItems([{ id: 'new', desc: 'New Desc' }]);
+    const result = collection.setItems([{ id: "new", desc: "New Desc" }]);
 
     expect(result).toBe(false);
-    expect(collection.hasItem('existing')).toBe(true);
-    expect(collection.hasItem('new')).toBe(false);
+    expect(collection.hasItem("existing")).toBe(true);
+    expect(collection.hasItem("new")).toBe(false);
   });
 
-  it('reset should call insert hooks with correct parameters', () => {
+  it("reset should call insert hooks with correct parameters", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; val: number }
     >({
-      primaryKey: 'id',
-      initialItems: [{ id: 'num1', val: 123 }],
+      primaryKey: "id",
+      initialItems: [{ id: "num1", val: 123 }],
     });
 
     const insertBeforeHook = vi.fn(() => true);
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:before',
+      "insert:before",
       insertBeforeHook,
     );
 
@@ -2853,74 +2853,74 @@ describe('Collection hooks - reset and setItems operations', () => {
 
     expect(insertBeforeHook).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        item: { id: 'num1', val: 123 },
+        item: { id: "num1", val: 123 },
         index: 0,
-        meta: expect.objectContaining({ primaryKey: 'id' }),
+        meta: expect.objectContaining({ primaryKey: "id" }),
       }),
     );
   });
 
-  it('setItems should call insert hooks with correct parameters', () => {
+  it("setItems should call insert hooks with correct parameters", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; code: string }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
     const insertAfterHook = vi.fn(() => true);
 
     collection[$CollectionHookDispatcherSymbol].register(
-      'insert:after',
+      "insert:after",
       insertAfterHook,
     );
 
-    collection.setItems([{ id: 'c1', code: 'abc' }]);
+    collection.setItems([{ id: "c1", code: "abc" }]);
 
     expect(insertAfterHook).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        item: { id: 'c1', code: 'abc' },
+        item: { id: "c1", code: "abc" },
         index: 0,
-        meta: expect.objectContaining({ primaryKey: 'id' }),
+        meta: expect.objectContaining({ primaryKey: "id" }),
       }),
     );
   });
 
-  it('reset should not crash with no hooks registered', () => {
+  it("reset should not crash with no hooks registered", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; val: number }
     >({
-      primaryKey: 'id',
-      initialItems: [{ id: 'init', val: 0 }],
+      primaryKey: "id",
+      initialItems: [{ id: "init", val: 0 }],
     });
 
-    collection.appendItem({ id: 'extra', val: 1 });
+    collection.appendItem({ id: "extra", val: 1 });
 
     const result = collection.reset();
 
     expect(result).toBe(true);
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('init')).not.toBeNull();
+    expect(collection.getItem("init")).not.toBeNull();
   });
 
-  it('setItems should not crash with no hooks registered', () => {
+  it("setItems should not crash with no hooks registered", () => {
     const collection = new Collection<
-      'id',
+      "id",
       string,
       { id: string; val: number }
     >({
-      primaryKey: 'id',
+      primaryKey: "id",
     });
 
-    collection.appendItem({ id: 'old', val: 5 });
+    collection.appendItem({ id: "old", val: 5 });
 
-    const result = collection.setItems([{ id: 'new', val: 10 }]);
+    const result = collection.setItems([{ id: "new", val: 10 }]);
 
     expect(result).toBe(true);
     expect(collection.numItems).toBe(1);
-    expect(collection.getItem('new')).not.toBeNull();
+    expect(collection.getItem("new")).not.toBeNull();
   });
 });

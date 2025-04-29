@@ -38,8 +38,8 @@ collectionInstance.clear(): boolean;
 ```ts
 const collection = new Collection({
   initialItems: [
-    { key: 'user1', name: 'John Doe' },
-    { key: 'user2', name: 'Alice' },
+    { key: "user1", name: "John Doe" },
+    { key: "user2", name: "Alice" },
   ],
 });
 
@@ -59,11 +59,11 @@ console.log(Array.from(collection)); // []
 ```ts
 const collection = new Collection();
 
-collection.appendItem({ key: 'user1', name: 'John Doe' });
+collection.appendItem({ key: "user1", name: "John Doe" });
 collection.clear();
-collection.appendItem({ key: 'user2', name: 'Alice' });
+collection.appendItem({ key: "user2", name: "Alice" });
 
 console.log(collection.numItems); // 1
-console.log(collection.getItem('user2'));
+console.log(collection.getItem("user2"));
 // { key: 'user2', name: 'Alice' }
 ```

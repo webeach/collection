@@ -44,15 +44,15 @@ Collection<PrimaryKey extends string, PrimaryKeyType extends string | number | b
 ### Пример кастомной типизации
 
 ```ts
-const collection = new Collection<'id', number, { id: number; name: string }>({
-  primaryKey: 'id',
+const collection = new Collection<"id", number, { id: number; name: string }>({
+  primaryKey: "id",
   initialItems: [
-    { id: 1, name: 'John Doe' },
-    { id: 2, name: 'Alice' },
+    { id: 1, name: "John Doe" },
+    { id: 2, name: "Alice" },
   ],
 });
 
-collection.appendItem({ id: 3, name: 'Bob' });
+collection.appendItem({ id: 3, name: "Bob" });
 
 console.log(collection.getItem(3));
 // { id: 3, name: 'Bob' }
@@ -77,13 +77,13 @@ console.log(collection.numItems); // 0
 ```ts
 const collection = new Collection({
   initialItems: [
-    { key: 'user1', name: 'John Doe' },
-    { key: 'user2', name: 'Alice' },
+    { key: "user1", name: "John Doe" },
+    { key: "user2", name: "Alice" },
   ],
 });
 
 console.log(collection.numItems); // 2
-console.log(collection.getItem('user1'));
+console.log(collection.getItem("user1"));
 // { key: 'user1', name: 'John Doe' }
 ```
 
@@ -93,10 +93,10 @@ console.log(collection.getItem('user1'));
 
 ```ts
 const collection = new Collection({
-  primaryKey: 'id',
+  primaryKey: "id",
   initialItems: [
-    { id: 1, name: 'John Doe' },
-    { id: 2, name: 'Alice' },
+    { id: 1, name: "John Doe" },
+    { id: 2, name: "Alice" },
   ],
 });
 

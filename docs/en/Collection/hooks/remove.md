@@ -43,11 +43,14 @@ hook({
 ### Blocking removal under certain conditions
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('remove:before', ({ item }) => {
-  if (item.protected) {
-    return false; // Prevent removal of protected items
-  }
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "remove:before",
+  ({ item }) => {
+    if (item.protected) {
+      return false; // Prevent removal of protected items
+    }
+  },
+);
 ```
 
 ---
@@ -55,7 +58,12 @@ collection[$CollectionHookDispatcherSymbol].register('remove:before', ({ item })
 ### Logging successful removal
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('remove:after', ({ item, index, meta }) => {
-  console.log(`Item with key ${item[meta.primaryKey]} was removed from position ${index}`);
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "remove:after",
+  ({ item, index, meta }) => {
+    console.log(
+      `Item with key ${item[meta.primaryKey]} was removed from position ${index}`,
+    );
+  },
+);
 ```

@@ -37,12 +37,12 @@ collectionInstance.prependItem(item): boolean;
 ```ts
 const collection = new Collection({
   initialItems: [
-    { key: 'user2', name: 'Alice' },
-    { key: 'user3', name: 'Bob' },
+    { key: "user2", name: "Alice" },
+    { key: "user3", name: "Bob" },
   ],
 });
 
-collection.prependItem({ key: 'user1', name: 'John Doe' });
+collection.prependItem({ key: "user1", name: "John Doe" });
 
 console.log(Array.from(collection));
 // [
@@ -59,12 +59,12 @@ console.log(Array.from(collection));
 ```ts
 const collection = new Collection({
   initialItems: [
-    { key: 'user1', name: 'Old John' },
-    { key: 'user2', name: 'Alice' },
+    { key: "user1", name: "Old John" },
+    { key: "user2", name: "Alice" },
   ],
 });
 
-collection.prependItem({ key: 'user1', name: 'New John' });
+collection.prependItem({ key: "user1", name: "New John" });
 
 console.log(Array.from(collection));
 // [

@@ -43,25 +43,36 @@ hook({
 ### Блокировка вставки при определённых условиях
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('insert:before', ({ item }) => {
-  if (item.type === 'forbidden') {
-    return false; // Блокируем вставку запрещённого типа
-  }
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "insert:before",
+  ({ item }) => {
+    if (item.type === "forbidden") {
+      return false; // Блокируем вставку запрещённого типа
+    }
+  },
+);
 ```
 
 ### Модификация элемента перед вставкой
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('insert:before', ({ item }) => {
-  item.createdAt = new Date();
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "insert:before",
+  ({ item }) => {
+    item.createdAt = new Date();
+  },
+);
 ```
 
 ### Реакция на успешную вставку
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('insert:after', ({ item, index, meta }) => {
-  console.log(`Элемент с ключом ${item[meta.primaryKey]} успешно вставлен на позицию ${index}`);
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "insert:after",
+  ({ item, index, meta }) => {
+    console.log(
+      `Элемент с ключом ${item[meta.primaryKey]} успешно вставлен на позицию ${index}`,
+    );
+  },
+);
 ```

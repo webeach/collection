@@ -35,7 +35,7 @@ collection.onUpdate = (event) => {
 
 ```ts
 collection.onUpdate = (event) => {
-  console.log('Коллекция обновлена. Элементов:', event.detail.length);
+  console.log("Коллекция обновлена. Элементов:", event.detail.length);
 };
 ```
 
@@ -44,7 +44,7 @@ collection.onUpdate = (event) => {
 ```ts
 collection.onUpdate = (event) => {
   for (const item of event.detail) {
-    console.log('Элемент в коллекции:', item);
+    console.log("Элемент в коллекции:", item);
   }
 };
 ```
@@ -54,6 +54,6 @@ collection.onUpdate = (event) => {
 ```ts
 collection.onUpdate = (event) => {
   event.stopImmediatePropagation();
-  console.log('Обновление обработано только здесь');
+  console.log("Обновление обработано только здесь");
 };
 ```

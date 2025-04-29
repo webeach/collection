@@ -1,4 +1,4 @@
-import { HookDispatcherBaseHandler } from './types';
+import { HookDispatcherBaseHandler } from "./types";
 
 /**
  * A generic dispatcher for managing and invoking event handlers

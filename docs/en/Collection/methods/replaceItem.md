@@ -24,9 +24,11 @@ collectionInstance.replaceItem(key, item): boolean;
 1. The validity of the new item is checked.
 2. The existing item is searched by the provided key.
 3. If the item is found:
-  - The `remove:before` hook is called.
-  - The old item is removed.
-  - The `remove:after` hook is called.
+
+- The `remove:before` hook is called.
+- The old item is removed.
+- The `remove:after` hook is called.
+
 4. The `insert:before` hook is called.
 5. The new item is inserted in place of the old one.
 6. The `insert:after` hook is called.
@@ -43,14 +45,14 @@ If no matching item is found, the new item will simply be appended to the end of
 ```ts
 const collection = new Collection({
   initialItems: [
-    { key: 'user1', name: 'John Doe' },
-    { key: 'user2', name: 'Alice' },
+    { key: "user1", name: "John Doe" },
+    { key: "user2", name: "Alice" },
   ],
 });
 
-collection.replaceItem('user1', { key: 'user1', name: 'Jane Smith' });
+collection.replaceItem("user1", { key: "user1", name: "Jane Smith" });
 
-console.log(collection.getItem('user1'));
+console.log(collection.getItem("user1"));
 // { key: 'user1', name: 'Jane Smith' }
 ```
 
@@ -61,9 +63,9 @@ console.log(collection.getItem('user1'));
 ```ts
 const collection = new Collection();
 
-collection.replaceItem('user3', { key: 'user3', name: 'Charlie' });
+collection.replaceItem("user3", { key: "user3", name: "Charlie" });
 
-console.log(collection.getItem('user3'));
+console.log(collection.getItem("user3"));
 // { key: 'user3', name: 'Charlie' }
 ```
 
@@ -73,14 +75,14 @@ console.log(collection.getItem('user3'));
 
 ```ts
 const collection = new Collection({
-  primaryKey: 'id',
+  primaryKey: "id",
   initialItems: [
-    { id: 1, name: 'Alice' },
-    { id: 2, name: 'Bob' },
+    { id: 1, name: "Alice" },
+    { id: 2, name: "Bob" },
   ],
 });
 
-collection.replaceItem(1, { id: 1, name: 'Alicia' });
+collection.replaceItem(1, { id: 1, name: "Alicia" });
 
 console.log(collection.getItem(1));
 // { id: 1, name: 'Alicia' }

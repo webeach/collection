@@ -43,9 +43,13 @@ CollectionUpdateEvent<PrimaryKey extends string, PrimaryKeyType extends string |
 ### Пример типизации
 
 ```ts
-const event = new CollectionUpdateEvent<'id', number, { id: number; name: string }>([
-  { id: 1, name: 'John Doe' },
-  { id: 2, name: 'Alice' },
+const event = new CollectionUpdateEvent<
+  "id",
+  number,
+  { id: number; name: string }
+>([
+  { id: 1, name: "John Doe" },
+  { id: 2, name: "Alice" },
 ]);
 
 console.log(event.type); // "update"

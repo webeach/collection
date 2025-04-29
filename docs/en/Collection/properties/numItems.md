@@ -23,14 +23,14 @@ const count = collection.numItems;
 ### Getting the number of items
 
 ```ts
-const collection = new Collection<'id', string, { id: string; label: string }>({
-  primaryKey: 'id',
+const collection = new Collection<"id", string, { id: string; label: string }>({
+  primaryKey: "id",
 });
 
 console.log(collection.numItems); // 0
 
-collection.appendItem({ id: 'a', label: 'First' });
-collection.appendItem({ id: 'b', label: 'Second' });
+collection.appendItem({ id: "a", label: "First" });
+collection.appendItem({ id: "b", label: "Second" });
 
 console.log(collection.numItems); // 2
 ```
@@ -40,7 +40,7 @@ console.log(collection.numItems); // 2
 ### After removing an item
 
 ```ts
-collection.removeItem('a');
+collection.removeItem("a");
 
 console.log(collection.numItems); // 1
 ```

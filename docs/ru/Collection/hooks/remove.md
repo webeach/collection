@@ -43,17 +43,25 @@ hook({
 ### Блокировка удаления по условию
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('remove:before', ({ item }) => {
-  if (item.protected) {
-    return false; // Нельзя удалить защищённые элементы
-  }
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "remove:before",
+  ({ item }) => {
+    if (item.protected) {
+      return false; // Нельзя удалить защищённые элементы
+    }
+  },
+);
 ```
 
 ### Логирование успешного удаления
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('remove:after', ({ item, index, meta }) => {
-  console.log(`Элемент с ключом ${item[meta.primaryKey]} удалён с позиции ${index}`);
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "remove:after",
+  ({ item, index, meta }) => {
+    console.log(
+      `Элемент с ключом ${item[meta.primaryKey]} удалён с позиции ${index}`,
+    );
+  },
+);
 ```

@@ -33,14 +33,14 @@ collectionInstance.setItems(items[]): boolean;
 ```ts
 const collection = new Collection({
   initialItems: [
-    { key: 'user1', name: 'John Doe' },
-    { key: 'user2', name: 'Alice' },
+    { key: "user1", name: "John Doe" },
+    { key: "user2", name: "Alice" },
   ],
 });
 
 collection.setItems([
-  { key: 'user3', name: 'Bob' },
-  { key: 'user4', name: 'Charlie' },
+  { key: "user3", name: "Bob" },
+  { key: "user4", name: "Charlie" },
 ]);
 
 console.log(collection.numItems); // 2
@@ -54,19 +54,19 @@ console.log(Array.from(collection));
 
 ```ts
 const collection = new Collection({
-  primaryKey: 'id',
+  primaryKey: "id",
   initialItems: [
-    { id: 'foo', title: 'First' },
-    { id: 'bar', title: 'Second' },
+    { id: "foo", title: "First" },
+    { id: "bar", title: "Second" },
   ],
 });
 
 collection.setItems([
-  { id: 'baz', title: 'Third' },
-  { id: 'qux', title: 'Fourth' },
+  { id: "baz", title: "Third" },
+  { id: "qux", title: "Fourth" },
 ]);
 
 console.log(collection.numItems); // 2
-console.log(collection.getItem('baz'));
+console.log(collection.getItem("baz"));
 // { id: 'baz', title: 'Third' }
 ```

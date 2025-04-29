@@ -39,10 +39,15 @@ hook({
 ### Blocking collection clearing
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('clear:before', ({ meta }) => {
-  console.log(`Attempt to clear a collection with primary key ${meta.primaryKey}`);
-  return false; // Prevent clearing
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "clear:before",
+  ({ meta }) => {
+    console.log(
+      `Attempt to clear a collection with primary key ${meta.primaryKey}`,
+    );
+    return false; // Prevent clearing
+  },
+);
 ```
 
 ---
@@ -50,7 +55,12 @@ collection[$CollectionHookDispatcherSymbol].register('clear:before', ({ meta }) 
 ### Action after successful clearing
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('clear:after', ({ meta }) => {
-  console.log(`Collection with primary key ${meta.primaryKey} has been successfully cleared.`);
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "clear:after",
+  ({ meta }) => {
+    console.log(
+      `Collection with primary key ${meta.primaryKey} has been successfully cleared.`,
+    );
+  },
+);
 ```

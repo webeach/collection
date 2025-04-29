@@ -1,1 +1,1 @@
-export { CollectionUpdateEvent } from './CollectionUpdateEvent';
+export { CollectionUpdateEvent } from "./CollectionUpdateEvent";

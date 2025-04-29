@@ -43,25 +43,36 @@ hook({
 ### Блокировка изменений по условию
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('patch:before', ({ item }) => {
-  if (item.readonly) {
-    return false; // Запрещаем изменять защищённые элементы
-  }
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "patch:before",
+  ({ item }) => {
+    if (item.readonly) {
+      return false; // Запрещаем изменять защищённые элементы
+    }
+  },
+);
 ```
 
 ### Логирование успешного изменения
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('patch:after', ({ item, index, meta }) => {
-  console.log(`Элемент с ключом ${item[meta.primaryKey]} обновлён на позиции ${index}`);
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "patch:after",
+  ({ item, index, meta }) => {
+    console.log(
+      `Элемент с ключом ${item[meta.primaryKey]} обновлён на позиции ${index}`,
+    );
+  },
+);
 ```
 
 ### Мутация элемента после успешного патчинга
 
 ```ts
-collection[$CollectionHookDispatcherSymbol].register('patch:after', ({ item }) => {
-  item.updatedAt = new Date(); // Добавляем поле времени обновления
-});
+collection[$CollectionHookDispatcherSymbol].register(
+  "patch:after",
+  ({ item }) => {
+    item.updatedAt = new Date(); // Добавляем поле времени обновления
+  },
+);
 ```

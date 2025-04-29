@@ -34,10 +34,10 @@ collectionInstance.appendItem(item): boolean;
 ```ts
 const collection = new Collection();
 
-collection.appendItem({ key: 'user1', name: 'John Doe' });
+collection.appendItem({ key: "user1", name: "John Doe" });
 
 console.log(collection.numItems); // 1
-console.log(collection.getItem('user1'));
+console.log(collection.getItem("user1"));
 // { key: 'user1', name: 'John Doe' }
 ```
 
@@ -47,13 +47,13 @@ console.log(collection.getItem('user1'));
 
 ```ts
 const collection = new Collection({
-  initialItems: [{ key: 'user1', name: 'John Doe' }],
+  initialItems: [{ key: "user1", name: "John Doe" }],
 });
 
-collection.appendItem({ key: 'user1', name: 'Jane Smith' });
+collection.appendItem({ key: "user1", name: "Jane Smith" });
 
 console.log(collection.numItems); // 1 (старый элемент заменён)
-console.log(collection.getItem('user1'));
+console.log(collection.getItem("user1"));
 // { key: 'user1', name: 'Jane Smith' }
 ```
 
@@ -64,12 +64,12 @@ console.log(collection.getItem('user1'));
 ```ts
 const collection = new Collection();
 
-collection.appendItem({ key: 'user2', name: 'Alice' });
-collection.appendItem({ key: 'user3', name: 'Bob' });
+collection.appendItem({ key: "user2", name: "Alice" });
+collection.appendItem({ key: "user3", name: "Bob" });
 
 console.log(collection.numItems); // 2
-console.log(collection.getItem('user2'));
+console.log(collection.getItem("user2"));
 // { key: 'user2', name: 'Alice' }
-console.log(collection.getItem('user3'));
+console.log(collection.getItem("user3"));
 // { key: 'user3', name: 'Bob' }
 ```
