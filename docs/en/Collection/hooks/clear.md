@@ -1,4 +1,4 @@
-# `clear:before` and `clear:after`
+# `clear:*`
 
 ## Description
 
