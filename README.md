@@ -14,6 +14,7 @@
     <a href="https://www.npmjs.com/package/@webeach/collection">
       <img src="https://img.shields.io/npm/dm/@webeach/collection.svg?color=104F85&labelColor=1E7EBA" alt="npm downloads" />
     </a>
+    <img src="https://img.shields.io/coderabbit/prs/github/webeach/collection?utm_source=oss&utm_medium=github&utm_campaign=webeach%2Fcollection&labelColor=1E7EBA&color=104F85&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews" alt="">
   </p>
   <p><a href="./README.md">🇺🇸 English version</a> | <a href="./README.ru.md">🇷🇺 Русская версия</a></p>
   <p>Managed collection of items with hooks, events, and strict type safety.</p>
