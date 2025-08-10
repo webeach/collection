@@ -1,5 +1,5 @@
 import { BaseObject } from '../../types/common';
-import { CollectionBaseKeyType, CollectionItem } from '../Collection';
+import { CollectionDefaultKeyType, CollectionItem } from '../Collection';
 
 /**
  * Custom event for notifying about updates in a collection.
@@ -10,7 +10,7 @@ import { CollectionBaseKeyType, CollectionItem } from '../Collection';
  */
 export class CollectionUpdateEvent<
   PrimaryKey extends string = 'key',
-  PrimaryKeyType extends CollectionBaseKeyType = CollectionBaseKeyType,
+  PrimaryKeyType = CollectionDefaultKeyType,
   ItemData extends BaseObject = BaseObject,
 > extends CustomEvent<
   ReadonlyArray<CollectionItem<PrimaryKey, PrimaryKeyType, ItemData>>

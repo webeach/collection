@@ -17,7 +17,7 @@ describe('Collection basic methods', () => {
     expect(collection.getItem('a')?.value).toBe(1);
   });
 
-  it('appendItem should replace item with same key', () => {
+  it('appendItem should replace item with primitive key', () => {
     const collection = new Collection<
       'key',
       string,
@@ -29,6 +29,40 @@ describe('Collection basic methods', () => {
 
     expect(collection.numItems).toBe(1);
     expect(collection.getItem('a')?.value).toBe(2);
+  });
+
+  it('appendItem should replace item with non primitive key', () => {
+    const collection = new Collection<
+      'key',
+      unknown,
+      { key: unknown; value: number }
+    >();
+
+    const key = {};
+
+    collection.appendItem({ key, value: 1 });
+    collection.appendItem({ key, value: 2 });
+
+    expect(collection.numItems).toBe(1);
+    expect(collection.getItem(key)?.value).toBe(2);
+  });
+
+  it('appendItem should NOT replace when non-primitive keys are equal by value but not by reference', () => {
+    const collection = new Collection<
+      'key',
+      unknown,
+      { key: { a: number }; value: number }
+    >();
+
+    const key1 = { a: 1 };
+    const key2 = { a: 1 };
+
+    collection.appendItem({ key: key1, value: 1 });
+    collection.appendItem({ key: key2, value: 2 });
+
+    expect(collection.numItems).toBe(2);
+    expect(collection.getItem(key1)?.value).toBe(1);
+    expect(collection.getItem(key2)?.value).toBe(2);
   });
 
   // --- appendItemAt ---

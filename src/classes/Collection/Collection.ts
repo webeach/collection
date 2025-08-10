@@ -5,7 +5,7 @@ import { HookDispatcher } from '../HookDispatcher';
 import { $CollectionHookDispatcherSymbol } from './constants';
 import {
   CollectionBaseItemData,
-  CollectionBaseKeyType,
+  CollectionDefaultKeyType,
   CollectionHookOperationType,
   CollectionHookParamsMap,
   CollectionHookParamsMeta,
@@ -24,9 +24,11 @@ import {
  */
 export class Collection<
   PrimaryKey extends string = 'key',
-  PrimaryKeyType extends CollectionBaseKeyType = CollectionBaseKeyType,
-  ItemData extends
-    CollectionBaseItemData<PrimaryKey> = CollectionBaseItemData<PrimaryKey>,
+  PrimaryKeyType = CollectionDefaultKeyType,
+  ItemData extends CollectionBaseItemData<
+    PrimaryKey,
+    PrimaryKeyType
+  > = CollectionBaseItemData<PrimaryKey, PrimaryKeyType>,
 > extends EventTarget {
   /**
    * A handler that is called whenever the collection is updated.
@@ -78,7 +80,7 @@ export class Collection<
 
   /** Map for fast item lookup by primary key. */
   protected readonly itemsByMap = new Map<
-    CollectionBaseKeyType,
+    CollectionDefaultKeyType | unknown,
     CollectionItem<
       CollectionPrimaryKeyWithDefault<PrimaryKey>,
       PrimaryKeyType,
@@ -248,7 +250,7 @@ export class Collection<
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/getItem.md
    */
-  public getItem(key: PrimaryKeyType) {
+  public getItem(key: PrimaryKeyType | unknown) {
     return this.itemsByMap.get(key) || null;
   }
 
@@ -260,7 +262,7 @@ export class Collection<
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/hasItem.md
    */
-  public hasItem(key: PrimaryKeyType) {
+  public hasItem(key: PrimaryKeyType | unknown) {
     return this.itemsByMap.has(key);
   }
 
@@ -387,7 +389,7 @@ export class Collection<
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/removeItem.md
    */
-  public removeItem(key: PrimaryKeyType) {
+  public removeItem(key: PrimaryKeyType | unknown) {
     if (!this._removeItem(key)) {
       return false;
     }
@@ -647,7 +649,7 @@ export class Collection<
   }
 
   /** Internally removes an item by its key and fires hooks. */
-  protected _removeItem(key: PrimaryKeyType) {
+  protected _removeItem(key: PrimaryKeyType | unknown) {
     const targetItem = this.getItem(key);
 
     if (targetItem === null) {
@@ -742,21 +744,6 @@ export class Collection<
       if (__DEVELOPMENT__) {
         console.error(
           `CollectionError: missing required primary key "${this.primaryKey}" in item.`,
-        );
-      }
-      return false;
-    }
-
-    const key = item[this.primaryKey];
-
-    if (
-      typeof key !== 'string' &&
-      typeof key !== 'bigint' &&
-      (typeof key !== 'number' || !Number.isFinite(key))
-    ) {
-      if (__DEVELOPMENT__) {
-        console.error(
-          `CollectionError: primary key "${this.primaryKey}" must be a string, finite number, or bigint.`,
         );
       }
       return false;

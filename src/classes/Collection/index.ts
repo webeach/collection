@@ -2,7 +2,7 @@ export { Collection } from './Collection';
 
 export type {
   CollectionBaseItemData,
-  CollectionBaseKeyType,
+  CollectionDefaultKeyType,
   CollectionItem,
   CollectionHookOperationType,
   CollectionOptions,

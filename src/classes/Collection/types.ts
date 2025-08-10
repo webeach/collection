@@ -7,14 +7,17 @@ import { CollectionUpdateEvent } from '../CollectionUpdateEvent';
  *
  * @typeParam PrimaryKey - The field name used as the primary key (defaults to `'key'`).
  */
-export type CollectionBaseItemData<PrimaryKey extends string = 'key'> = {
-  [K in PrimaryKey]: CollectionBaseKeyType;
+export type CollectionBaseItemData<
+  PrimaryKey extends string = 'key',
+  PrimaryKeyType = CollectionDefaultKeyType,
+> = {
+  [K in PrimaryKey]: PrimaryKeyType;
 } & BaseObject;
 
 /**
- * Defines the allowed types for a primary key.
+ * Defines the default types for a primary key.
  */
-export type CollectionBaseKeyType = string | number | bigint;
+export type CollectionDefaultKeyType = string | number | bigint;
 
 /**
  * Parameters passed to collection hooks for item-based operations
@@ -26,7 +29,7 @@ export type CollectionBaseKeyType = string | number | bigint;
  */
 export type CollectionHookParams<
   PrimaryKey extends string = 'key',
-  PrimaryKeyType extends CollectionBaseKeyType = CollectionBaseKeyType,
+  PrimaryKeyType = CollectionDefaultKeyType,
   ItemData extends BaseObject = BaseObject,
 > = [
   options: {
@@ -61,7 +64,7 @@ export type CollectionHookParamsOperationClear<
  */
 export type CollectionHookParamsMap<
   PrimaryKey extends string = 'key',
-  PrimaryKeyType extends CollectionBaseKeyType = CollectionBaseKeyType,
+  PrimaryKeyType = CollectionDefaultKeyType,
   ItemData extends BaseObject = BaseObject,
 > = {
   [OperationKey in CollectionHookOperationType]: OperationKey extends `clear:${CollectionHookOperationStage}`
@@ -108,7 +111,7 @@ export type CollectionHookOperationType =
  */
 export type CollectionItem<
   PrimaryKey extends string = 'key',
-  PrimaryKeyType extends CollectionBaseKeyType = CollectionBaseKeyType,
+  PrimaryKeyType = CollectionDefaultKeyType,
   ItemData extends BaseObject = BaseObject,
 > = Omit<ItemData, PrimaryKey> & {
   readonly [K in PrimaryKey]: PrimaryKeyType;
@@ -123,9 +126,11 @@ export type CollectionItem<
  */
 export type CollectionOptions<
   PrimaryKey extends string = 'key',
-  PrimaryKeyType extends CollectionBaseKeyType = CollectionBaseKeyType,
-  ItemData extends
-    CollectionBaseItemData<PrimaryKey> = CollectionBaseItemData<PrimaryKey>,
+  PrimaryKeyType = CollectionDefaultKeyType,
+  ItemData extends CollectionBaseItemData<
+    PrimaryKey,
+    PrimaryKeyType
+  > = CollectionBaseItemData<PrimaryKey, PrimaryKeyType>,
 > = {
   /** Initial list of items in the collection. */
   initialItems?: ReadonlyArray<
@@ -152,9 +157,11 @@ export type CollectionPrimaryKeyWithDefault<PrimaryKey extends string> =
  */
 export type CollectionUpdateEventHandler<
   PrimaryKey extends string = 'key',
-  PrimaryKeyType extends CollectionBaseKeyType = CollectionBaseKeyType,
-  ItemData extends
-    CollectionBaseItemData<PrimaryKey> = CollectionBaseItemData<PrimaryKey>,
+  PrimaryKeyType = CollectionDefaultKeyType,
+  ItemData extends CollectionBaseItemData<
+    PrimaryKey,
+    PrimaryKeyType
+  > = CollectionBaseItemData<PrimaryKey, PrimaryKeyType>,
 > = (
   event: CollectionUpdateEvent<PrimaryKey, PrimaryKeyType, ItemData>,
 ) => void;
