@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/webeach/collection/compare/v1.0.2...v1.1.0) (2025-08-10)
+
+
+### Features
+
+* expand key support to any type and improve typings ([6769702](https://github.com/webeach/collection/commit/676970261aa7e4a49a1ef22aad47d1b3d74463b7))
+
 ## [1.0.2](https://github.com/webeach/collection/compare/v1.0.1...v1.0.2) (2025-04-27)
 
 
