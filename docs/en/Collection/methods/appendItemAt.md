@@ -24,7 +24,7 @@ collectionInstance.appendItemAt(item, index): boolean;
 
 1. Validates the presence of a correct primary key.
 2. Calls the `insert:before` hook.
-3. If an item with the same key exists, it is replaced (the old item is removed and `remove:*` hooks are triggered).
+3. If an item with the same key already exists, it is silently evicted (`remove:*` hooks are **not** triggered).
 4. The new item is inserted at the specified position (index is adjusted to be within valid bounds).
 5. Calls the `insert:after` hook.
 6. Triggers the `update` event.

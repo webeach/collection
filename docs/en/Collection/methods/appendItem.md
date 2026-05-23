@@ -23,7 +23,7 @@ collectionInstance.appendItem(item): boolean;
 
 1. Verifies the presence of a valid primary key.
 2. Triggers the `insert:before` hook.
-3. If an item with the same key already exists, it is replaced with the new item (the old item is removed, triggering `remove:*` hooks).
+3. If an item with the same key already exists, it is silently evicted (`remove:*` hooks are **not** triggered).
 4. Triggers the `insert:after` hook.
 5. Triggers the `update` event.
 

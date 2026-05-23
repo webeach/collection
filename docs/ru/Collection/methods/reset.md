@@ -10,10 +10,10 @@
 ## Синтаксис
 
 ```ts
-collectionInstance.reset(): void;
+collectionInstance.reset(): boolean;
 ```
 
-- **Возвращает** — `true`, если были успешно добавлены элементы после сброса; иначе `false`.
+- **Возвращает** — `true`, если сброс выполнен успешно; `false`, если хук `clear:before` отменил операцию.
 
 ---
 

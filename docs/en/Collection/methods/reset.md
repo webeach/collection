@@ -13,7 +13,7 @@ After a successful reset, an `update` event will be triggered.
 collectionInstance.reset(): boolean;
 ```
 
-- **Returns** — `true` if items were successfully restored after reset; otherwise `false`.
+- **Returns** — `true` if the reset completed successfully; `false` if a `clear:before` hook cancelled the operation.
 
 ---
 

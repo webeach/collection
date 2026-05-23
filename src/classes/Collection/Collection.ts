@@ -15,10 +15,32 @@ import {
 } from './types';
 
 /**
- * A strongly-typed collection class with event support and hook dispatching.
+ * A strongly-typed collection of items keyed by a primary key, with lifecycle hooks
+ * and `update` event notifications.
+ *
+ * @remarks
+ * **Hooks**
+ *
+ * Every mutating method dispatches lifecycle hooks (`<action>:before` /
+ * `<action>:after`) through `[$CollectionHookDispatcherSymbol]`. Returning
+ * `false` from a `before` hook cancels the operation; the corresponding
+ * `after` hook is not dispatched and no `update` event is emitted.
+ *
+ * **Update event**
+ *
+ * On every successful mutation a `CollectionUpdateEvent` is dispatched first
+ * to the `onUpdate` callback and then to `addEventListener('update', ...)`
+ * listeners.
+ *
+ * **Replace-on-insert is silent**
+ *
+ * When an `append`/`insert`-style method receives an item whose primary key
+ * already exists, the existing item is removed *silently* (no `remove:*`
+ * hooks are dispatched) — replacement is considered part of the insert
+ * operation, not a separate remove.
  *
  * @template PrimaryKey - Name of the primary key field.
- * @template PrimaryKeyType - Type of the primary key.
+ * @template PrimaryKeyType - Type of the primary key value.
  * @template ItemData - Shape of the item data.
  */
 export class Collection<
@@ -28,10 +50,8 @@ export class Collection<
     CollectionBaseItemData<PrimaryKey, PrimaryKeyType>,
 > extends EventTarget {
   /**
-   * A handler that is called whenever the collection is updated.
-   *
-   * This function is triggered after successful operations like adding, removing, patching, or resetting items.
-   * To unsubscribe, set this property to `null`.
+   * Callback invoked with a `CollectionUpdateEvent` after every successful
+   * mutation. Set to `null` to unsubscribe.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/properties/onUpdate.md
    */
@@ -42,15 +62,10 @@ export class Collection<
   > | null = null;
 
   /**
-   * The internal hook dispatcher for managing lifecycle hooks within the collection.
+   * Hook dispatcher exposed via a unique symbol. Use `register(...)` on it to
+   * subscribe to lifecycle hooks of this collection.
    *
-   * It allows registering custom logic for operations like insert, remove, patch, and clear.
-   * Useful for intercepting or extending collection behavior.
-   *
-   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/hooks/clear.md
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/hooks/insert.md
-   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/hooks/patch.md
-   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/hooks/remove.md
    */
   public [$CollectionHookDispatcherSymbol] = new HookDispatcher<
     CollectionHookOperationType,
@@ -61,21 +76,21 @@ export class Collection<
     >
   >();
 
-  /** Initial items of the collection (copied from options). */
+  /** Initial items captured from options; used by {@link reset}. */
   protected readonly initialItems: CollectionItem<
     CollectionPrimaryKeyWithDefault<PrimaryKey>,
     PrimaryKeyType,
     ItemData
   >[];
 
-  /** Current list of items. */
+  /** Current items in insertion order. */
   protected readonly items: CollectionItem<
     CollectionPrimaryKeyWithDefault<PrimaryKey>,
     PrimaryKeyType,
     ItemData
   >[] = [];
 
-  /** Map for fast item lookup by primary key. */
+  /** Primary-key index for O(1) lookups. */
   protected readonly itemsByMap = new Map<
     CollectionDefaultKeyType | unknown,
     CollectionItem<
@@ -88,21 +103,15 @@ export class Collection<
   /** Field name used as the primary key. */
   protected readonly primaryKey: PrimaryKey extends never ? 'key' : PrimaryKey;
 
-  /** Meta information passed to hooks. */
+  /** Frozen meta object passed to every hook. */
   private readonly hookMeta: CollectionHookParamsMeta<
     CollectionPrimaryKeyWithDefault<PrimaryKey>
   >;
 
   /**
-   * Creates a new instance of the `Collection`.
-   *
-   * Initializes the collection with optional initial items and a custom primary key.
-   * If no primary key is provided, the default `'key'` field is used.
-   * The collection is populated using the provided `initialItems`, and hooks metadata is prepared.
-   *
-   * @param options - Configuration options for initializing the collection:
-   * - `initialItems` — An array of initial items to populate the collection (optional).
-   * - `primaryKey` — The name of the field to be used as the primary key (optional, defaults to `'key'`).
+   * @param options - Configuration:
+   * - `initialItems` — items to populate the collection with.
+   * - `primaryKey` — field name used as the unique identifier (defaults to `'key'`).
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/constructor.md
    */
@@ -129,13 +138,10 @@ export class Collection<
   }
 
   /**
-   * Adds a new item to the end of the collection.
+   * Appends `item` to the end (or replaces an existing item with the same key).
    *
-   * If an item with the same primary key already exists, it will be replaced.
-   * After a successful insertion, an `update` event is triggered.
-   *
-   * @param item - The item to add to the collection.
-   * @returns `true` if the item was successfully added; otherwise `false`.
+   * @returns `true` if the item was inserted; `false` if validation failed
+   * or an `insert:before` hook cancelled the operation.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/appendItem.md
    */
@@ -156,14 +162,9 @@ export class Collection<
   }
 
   /**
-   * Adds a new item to the collection at the specified index.
+   * Appends `item` at the given `index` (clamped to `[0, numItems]`).
    *
-   * If an item with the same primary key already exists, it will be replaced.
-   * After a successful insertion, an `update` event is triggered.
-   *
-   * @param item - The item to add to the collection.
-   * @param index - The position in the collection where the item should be inserted.
-   * @returns `true` if the item was successfully added; otherwise `false`.
+   * @returns `true` if the item was inserted; otherwise `false`.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/appendItemAt.md
    */
@@ -185,12 +186,10 @@ export class Collection<
   }
 
   /**
-   * Completely clears the collection, removing all items and resetting internal indexes.
+   * Removes all items.
    *
-   * If the collection is already empty, or if the clearing is canceled via a hook, no changes are made.
-   * After a successful clearing, an `update` event is triggered.
-   *
-   * @returns `true` if the collection was successfully cleared; otherwise `false`.
+   * @returns `true` if the collection was cleared; `false` if it was already
+   * empty or a `clear:before` hook cancelled the operation.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/clear.md
    */
@@ -205,15 +204,9 @@ export class Collection<
   }
 
   /**
-   * Iterates over all items in the collection and executes the provided callback for each item.
+   * Iterates over a snapshot of the items.
    *
-   * Iteration is performed on a copy of the current items to ensure that changes to the collection
-   * during iteration do not affect the ongoing process.
-   *
-   * @param callback - A function that will be called for each item:
-   * - `item` — the current item (read-only).
-   * - `index` — the index of the current item.
-   * - `currentItems` — a read-only array containing a copy of all items at the start of iteration.
+   * @param callback - Receives `(item, index, currentItems)` for each item.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/forEach.md
    */
@@ -240,22 +233,18 @@ export class Collection<
   }
 
   /**
-   * Retrieves an item from the collection by its primary key.
+   * Retrieves an item by its primary key.
    *
-   * @param key - The primary key of the item to retrieve.
-   * @returns The item if found; otherwise `null`.
+   * @returns The item or `null` when not found.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/getItem.md
    */
   public getItem(key: PrimaryKeyType | unknown) {
-    return this.itemsByMap.get(key) || null;
+    return this.itemsByMap.get(key) ?? null;
   }
 
   /**
-   * Checks whether an item with the specified primary key exists in the collection.
-   *
-   * @param key - The primary key of the item to check.
-   * @returns `true` if the item exists; otherwise `false`.
+   * Checks whether an item with the given primary key exists.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/hasItem.md
    */
@@ -264,14 +253,10 @@ export class Collection<
   }
 
   /**
-   * Inserts a new item into the collection immediately after the item with the specified primary key.
+   * Inserts `item` immediately after the item with the given `key`.
+   * If the target is missing, the item is appended.
    *
-   * If the target item is not found, the new item is appended to the end of the collection.
-   * After a successful insertion, an `update` event is triggered.
-   *
-   * @param key - The primary key of the item after which the new item should be inserted.
-   * @param item - The item to insert into the collection.
-   * @returns `true` if the item was successfully inserted; otherwise `false`.
+   * @returns `true` if the item was inserted; otherwise `false`.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/insertItemAfter.md
    */
@@ -293,14 +278,10 @@ export class Collection<
   }
 
   /**
-   * Inserts a new item into the collection immediately before the item with the specified primary key.
+   * Inserts `item` immediately before the item with the given `key`.
+   * If the target is missing, the item is appended.
    *
-   * If the target item is not found, the new item is appended to the end of the collection.
-   * After a successful insertion, an `update` event is triggered.
-   *
-   * @param key - The primary key of the item before which the new item should be inserted.
-   * @param item - The item to insert into the collection.
-   * @returns `true` if the item was successfully inserted; otherwise `false`.
+   * @returns `true` if the item was inserted; otherwise `false`.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/insertItemBefore.md
    */
@@ -322,15 +303,15 @@ export class Collection<
   }
 
   /**
-   * Partially updates an existing item in the collection by its primary key.
+   * Partially updates an existing item.
    *
-   * Only the provided fields in the `patchData` will be updated; other fields remain unchanged.
-   * The primary key of the item is forcibly preserved and cannot be modified.
-   * After a successful patch, an `update` event is triggered.
+   * @remarks
+   * Mutates the existing object reference in place via `Object.assign` — any
+   * external references to the same item will observe the changes. The primary
+   * key field is forcibly preserved; attempts to change it via `patchData` are
+   * silently overridden (and produce a `console.error` in development builds).
    *
-   * @param key - The primary key of the item to update.
-   * @param patchData - A partial object containing the fields to update.
-   * @returns `true` if the item was successfully updated; otherwise `false`.
+   * @returns `true` if the item was found and patched; otherwise `false`.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/patchItem.md
    */
@@ -350,13 +331,9 @@ export class Collection<
   }
 
   /**
-   * Adds a new item to the beginning of the collection.
+   * Prepends `item` to the beginning (or replaces an existing item with the same key).
    *
-   * If an item with the same primary key already exists, it will be replaced.
-   * After a successful insertion, an `update` event is triggered.
-   *
-   * @param item - The item to add to the collection.
-   * @returns `true` if the item was successfully added; otherwise `false`.
+   * @returns `true` if the item was inserted; otherwise `false`.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/prependItem.md
    */
@@ -377,12 +354,10 @@ export class Collection<
   }
 
   /**
-   * Removes an item from the collection by its primary key.
+   * Removes an item by its primary key.
    *
-   * If the item is found and successfully removed, an `update` event is triggered.
-   *
-   * @param key - The primary key of the item to remove.
-   * @returns `true` if the item was successfully removed; otherwise `false`.
+   * @returns `true` if the item was found and removed; `false` if it does not
+   * exist or a `remove:before` hook cancelled the operation.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/removeItem.md
    */
@@ -397,14 +372,10 @@ export class Collection<
   }
 
   /**
-   * Replaces an existing item in the collection with a new item by its primary key.
+   * Replaces the item identified by `key` with `item`. If the target is missing,
+   * `item` is appended to the end.
    *
-   * If the target item is not found, the new item is appended to the end of the collection.
-   * After a successful replacement or addition, an `update` event is triggered.
-   *
-   * @param key - The primary key of the item to replace.
-   * @param item - The new item to insert into the collection.
-   * @returns `true` if the operation was successful; otherwise `false`.
+   * @returns `true` if the operation succeeded; otherwise `false`.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/replaceItem.md
    */
@@ -426,17 +397,15 @@ export class Collection<
   }
 
   /**
-   * Resets the collection to its initial state based on the original `initialItems`.
+   * Resets the collection back to its `initialItems`.
    *
-   * If the collection had modifications, it will be cleared and repopulated with the initial items.
-   * After a successful reset, an `update` event is triggered.
-   *
-   * @returns `true` if the collection was successfully reset; otherwise `false`.
+   * @returns `true` if the operation completed; `false` if a `clear:before`
+   * hook cancelled it.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/reset.md
    */
   public reset() {
-    if (!this._reset()) {
+    if (this._reset() === null) {
       return false;
     }
 
@@ -446,13 +415,11 @@ export class Collection<
   }
 
   /**
-   * Completely replaces the contents of the collection with the provided items.
+   * Replaces all items with the provided ones (clears first, then inserts).
    *
-   * The collection will be cleared before inserting the new items.
-   * After a successful replacement, an `update` event is triggered.
-   *
-   * @param items - An array of new items to set in the collection.
-   * @returns `true` if the items were successfully set; otherwise `false`.
+   * @returns The number of items successfully inserted (may be `0` if `items`
+   * is empty but the operation still ran). Returns `0` and skips dispatching
+   * `update` if the initial `clear:before` hook cancelled the operation.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/setItems.md
    */
@@ -463,21 +430,19 @@ export class Collection<
       ItemData
     >[],
   ) {
-    if (!this._setItems(items)) {
-      return false;
+    const insertedCount = this._setItems(items);
+
+    if (insertedCount === null) {
+      return 0;
     }
 
     this._dispatchUpdate();
 
-    return true;
+    return insertedCount;
   }
 
   /**
-   * Returns the current number of items in the collection.
-   *
-   * This is a read-only property that always reflects the latest state of the collection.
-   *
-   * @returns The number of items in the collection.
+   * Current number of items.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/properties/numItems.md
    */
@@ -486,12 +451,7 @@ export class Collection<
   }
 
   /**
-   * Returns an iterator over the items in the collection.
-   *
-   * Iteration is performed on a copy of the items to ensure that changes to the collection
-   * during iteration do not affect the ongoing iteration.
-   *
-   * @returns An iterator over the collection items.
+   * Iterator over a snapshot of the items, enabling `for...of` usage.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/[Symbol.iterator].md
    */
@@ -499,7 +459,10 @@ export class Collection<
     return this.items.slice()[Symbol.iterator]();
   }
 
-  /** Internally appends an item at a given index. Handles hooks and validation. */
+  /**
+   * Inserts an item at the given index. If an item with the same key already
+   * exists, it is removed *silently* (no `remove:*` hooks) before insertion.
+   */
   protected _appendItem(
     item: CollectionItem<
       CollectionPrimaryKeyWithDefault<PrimaryKey>,
@@ -508,13 +471,16 @@ export class Collection<
     >,
     index = this.numItems,
   ) {
+    if (!this._validateItem(item)) {
+      return false;
+    }
+
     const normalizedIndex = Math.min(Math.max(index, 0), this.numItems);
 
     if (
-      !this._validateItem(item) ||
       !this[$CollectionHookDispatcherSymbol].dispatch('insert:before', {
         item,
-        index,
+        index: normalizedIndex,
         meta: this.hookMeta,
       })
     ) {
@@ -523,23 +489,31 @@ export class Collection<
 
     const key = item[this.primaryKey];
 
+    // Silently evict the existing item with the same key (replace semantics).
     if (this.hasItem(key)) {
-      this._removeItem(key);
+      const existing = this.itemsByMap.get(key)!;
+      const existingIndex = this.items.indexOf(existing);
+
+      this.items.splice(existingIndex, 1);
+      this.itemsByMap.delete(key);
     }
 
-    this.items.splice(normalizedIndex, 0, item);
+    // Re-clamp after potential silent removal.
+    const finalIndex = Math.min(normalizedIndex, this.numItems);
+
+    this.items.splice(finalIndex, 0, item);
     this.itemsByMap.set(key, item);
 
     this[$CollectionHookDispatcherSymbol].dispatch('insert:after', {
       item,
-      index,
+      index: finalIndex,
       meta: this.hookMeta,
     });
 
     return true;
   }
 
-  /** Internally clears all items. Handles hooks. */
+  /** Clears all items. Returns `false` if already empty or a hook cancelled. */
   protected _clear() {
     if (this.numItems === 0) {
       return false;
@@ -563,7 +537,7 @@ export class Collection<
     return true;
   }
 
-  /** Dispatches an update event to listeners and subscribers. */
+  /** Dispatches the `update` event to `onUpdate` and registered listeners. */
   protected _dispatchUpdate() {
     const updateEvent = new CollectionUpdateEvent<
       CollectionPrimaryKeyWithDefault<PrimaryKey>,
@@ -578,7 +552,7 @@ export class Collection<
     }
   }
 
-  /** Internally inserts an item relative to another item. */
+  /** Inserts `item` relative to the item identified by `key`. */
   protected _insertItem(
     key: PrimaryKeyType,
     item: CollectionItem<
@@ -601,7 +575,7 @@ export class Collection<
     return this._appendItem(item, targetItemIndex);
   }
 
-  /** Internally patches an existing item and fires hooks. */
+  /** Partially updates the item identified by `key`. */
   protected _patchItem(
     key: PrimaryKeyType,
     patchData: Partial<
@@ -645,7 +619,7 @@ export class Collection<
     return true;
   }
 
-  /** Internally removes an item by its key and fires hooks. */
+  /** Removes the item identified by `key`. Dispatches `remove:*` hooks. */
   protected _removeItem(key: PrimaryKeyType | unknown) {
     const targetItem = this.getItem(key);
 
@@ -677,7 +651,10 @@ export class Collection<
     return true;
   }
 
-  /** Internally replaces an item or inserts a new one if missing. */
+  /**
+   * Replaces the item identified by `key` with `item` at the same position.
+   * The old item is removed *silently* (no `remove:*` hooks).
+   */
   protected _replaceItem(
     key: PrimaryKeyType,
     item: CollectionItem<
@@ -694,42 +671,52 @@ export class Collection<
     const targetItemIndex =
       targetItem === null ? this.numItems : this.items.indexOf(targetItem);
 
+    // Silently evict the target item (no remove hooks).
     if (targetItem !== null) {
-      this._removeItem(key);
+      this.items.splice(targetItemIndex, 1);
+      this.itemsByMap.delete(key);
     }
 
     return this._appendItem(item, targetItemIndex);
   }
 
-  /** Internally resets collection to its initial state. */
+  /** Resets the collection to `initialItems`. */
   protected _reset() {
     return this._setItems(this.initialItems);
   }
 
-  /** Internally sets a new array of items. */
+  /**
+   * Replaces all items.
+   *
+   * @returns The number of successfully inserted items (may be `0` when
+   * `items` is empty), or `null` if a `clear:before` hook cancelled the
+   * operation.
+   */
   protected _setItems(
-    items: CollectionItem<
-      CollectionPrimaryKeyWithDefault<PrimaryKey>,
-      PrimaryKeyType,
-      ItemData
-    >[],
-  ) {
+    items: ReadonlyArray<
+      CollectionItem<
+        CollectionPrimaryKeyWithDefault<PrimaryKey>,
+        PrimaryKeyType,
+        ItemData
+      >
+    >,
+  ): number | null {
     if (this.numItems !== 0 && !this._clear()) {
-      return false;
+      return null;
     }
 
-    if (items.length === 0) {
-      return true;
+    let insertedCount = 0;
+
+    for (const item of items) {
+      if (this._appendItem(item)) {
+        insertedCount++;
+      }
     }
 
-    const trueOnce = items.filter((item) => {
-      return this._appendItem(item);
-    });
-
-    return trueOnce.length !== 0;
+    return insertedCount;
   }
 
-  /** Validates that an item has a proper primary key and key type. */
+  /** Validates that `item` carries the primary-key field. */
   private _validateItem(
     item: CollectionItem<
       CollectionPrimaryKeyWithDefault<PrimaryKey>,

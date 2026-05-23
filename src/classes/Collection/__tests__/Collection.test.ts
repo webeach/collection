@@ -2672,7 +2672,7 @@ describe('Collection hooks - clear operations', () => {
 
     const result = collection.setItems([{ id: 'new1', asset: 'New Asset' }]);
 
-    expect(result).toBe(false);
+    expect(result).toBe(0);
     expect(collection.hasItem('old1')).toBe(true);
     expect(collection.hasItem('new1')).toBe(false);
   });
@@ -2863,7 +2863,7 @@ describe('Collection hooks - reset and setItems operations', () => {
 
     const result = collection.setItems([{ id: 'new', desc: 'New Desc' }]);
 
-    expect(result).toBe(false);
+    expect(result).toBe(0);
     expect(collection.hasItem('existing')).toBe(true);
     expect(collection.hasItem('new')).toBe(false);
   });
@@ -2955,7 +2955,7 @@ describe('Collection hooks - reset and setItems operations', () => {
 
     const result = collection.setItems([{ id: 'new', val: 10 }]);
 
-    expect(result).toBe(true);
+    expect(result).toBe(1);
     expect(collection.numItems).toBe(1);
     expect(collection.getItem('new')).not.toBeNull();
   });

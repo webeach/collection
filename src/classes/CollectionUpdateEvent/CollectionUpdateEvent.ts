@@ -2,11 +2,14 @@ import { BaseObject } from '../../types/common';
 import { CollectionDefaultKeyType, CollectionItem } from '../Collection';
 
 /**
- * Custom event for notifying about updates in a collection.
+ * Custom event dispatched by `Collection` after every successful mutation.
  *
- * @typeParam PrimaryKey - The name of the primary key field (default is `'key'`).
- * @typeParam PrimaryKeyType - The type of the primary key value (default is `CollectionBaseKeyType`).
- * @typeParam ItemData - The shape of the item data (default is `BaseObject`).
+ * The event's `detail` is a snapshot (shallow copy) of the collection's items
+ * at the moment of dispatch.
+ *
+ * @typeParam PrimaryKey - The name of the primary key field.
+ * @typeParam PrimaryKeyType - The type of the primary key value.
+ * @typeParam ItemData - The shape of the item data.
  */
 export class CollectionUpdateEvent<
   PrimaryKey extends string = 'key',
@@ -16,14 +19,18 @@ export class CollectionUpdateEvent<
   ReadonlyArray<CollectionItem<PrimaryKey, PrimaryKeyType, ItemData>>
 > {
   /**
-   * Indicates whether immediate propagation of the event was stopped.
+   * Set to `true` after {@link stopImmediatePropagation} is called.
+   *
+   * `Collection` reads this flag to decide whether to call
+   * `dispatchEvent(event)` after the `onUpdate` callback. In other words,
+   * calling `event.stopImmediatePropagation()` inside `onUpdate` suppresses
+   * the subsequent `addEventListener('update', ...)` dispatch entirely — a
+   * behaviour intentionally broader than the standard `CustomEvent` semantics.
    */
   public immediatePropagationStopped = false;
 
   /**
-   * Creates a new `CollectionUpdateEvent` with the provided collection items.
-   *
-   * @param items - A readonly array of collection items to attach as event detail.
+   * @param items - A readonly array of collection items to attach as `event.detail`.
    */
   constructor(
     items: ReadonlyArray<CollectionItem<PrimaryKey, PrimaryKeyType, ItemData>>,
@@ -32,8 +39,13 @@ export class CollectionUpdateEvent<
   }
 
   /**
-   * Stops the immediate propagation of the event and sets the `immediatePropagationStopped` flag to `true`.
-   * Overrides the default `stopImmediatePropagation` method of `CustomEvent`.
+   * Stops immediate propagation and sets {@link immediatePropagationStopped}
+   * to `true`.
+   *
+   * @remarks
+   * In addition to the standard behaviour (stopping other listeners on the
+   * same event), `Collection` will skip calling `dispatchEvent` for this
+   * event after the `onUpdate` callback if this method was invoked there.
    */
   public override stopImmediatePropagation() {
     this.immediatePropagationStopped = true;

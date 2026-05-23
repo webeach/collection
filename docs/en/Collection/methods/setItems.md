@@ -10,11 +10,11 @@ After a successful replacement, an `update` event will be triggered.
 ## Syntax
 
 ```ts
-collectionInstance.setItems(items[]): boolean;
+collectionInstance.setItems(items[]): number;
 ```
 
 - **`items`** — an array of new items for the collection.
-- **Returns** — `true` if the items were successfully added; otherwise `false`.
+- **Returns** — the number of items successfully inserted (may be `0` when an empty array is passed). Returns `0` without dispatching an `update` event if a `clear:before` hook cancelled the operation.
 
 ---
 

@@ -23,7 +23,7 @@ collectionInstance.prependItem(item): boolean;
 
 1. The item is validated to ensure it has a correct primary key.
 2. The `insert:before` hook is called.
-3. If an item with the same key already exists, it is removed (triggering the `remove:*` hooks).
+3. If an item with the same key already exists, it is silently evicted (`remove:*` hooks are **not** triggered).
 4. The new item is inserted at the beginning of the collection.
 5. The `insert:after` hook is called.
 6. The `update` event is triggered.

@@ -1,11 +1,14 @@
 import { HookDispatcherBaseHandler } from './types';
 
 /**
- * A generic dispatcher for managing and invoking event handlers
- * based on specific operation types.
+ * A generic dispatcher for registering and invoking handlers for named operations.
+ *
+ * Handlers are invoked in LIFO order (last registered runs first). If any
+ * handler returns `false` from a {@link dispatch} call, the operation is
+ * considered cancelled and remaining handlers are skipped.
  *
  * @typeParam OperationType - A union of allowed operation names.
- * @typeParam ParamsTupleMap - A mapping from each operation to its expected parameter tuple.
+ * @typeParam ParamsTupleMap - A mapping from each operation to its parameter tuple.
  */
 export class HookDispatcher<
   OperationType extends string = string,
@@ -14,24 +17,21 @@ export class HookDispatcher<
     any[]
   >,
 > {
-  /**
-   * Internal map that associates each operation with its list of handlers.
-   */
+  /** Map from operation name to the list of registered handlers. */
   private readonly handlerMap = new Map<
     OperationType,
     HookDispatcherBaseHandler[]
   >();
 
   /**
-   * Dispatches an operation to all registered handlers.
+   * Invokes all handlers registered for `operation` with the given `params`.
    *
-   * @param operation - The name of the operation to dispatch.
-   * @param params - Parameters to pass to the handlers.
-   * @returns `true` if all handlers succeed or return void, otherwise `false` if any handler returns `false`.
+   * @returns `false` if any handler returned `false` (cancellation);
+   * otherwise `true`.
    */
-  public dispatch<OperationTypeKey extends OperationType>(
-    operation: OperationTypeKey,
-    ...params: ParamsTupleMap[OperationTypeKey]
+  public dispatch<OperationKey extends OperationType>(
+    operation: OperationKey,
+    ...params: ParamsTupleMap[OperationKey]
   ) {
     const handlerList = this.handlerMap.get(operation);
 
@@ -43,30 +43,25 @@ export class HookDispatcher<
   }
 
   /**
-   * Registers a new handler for a given operation.
+   * Registers `handler` for `operation`. Handlers are prepended, so the most
+   * recently registered handler runs first.
    *
-   * @param operation - The operation type the handler is associated with.
-   * @param handler - The handler function to register.
-   * @returns An object containing an `unregister` method and a `[Symbol.dispose]` method for manual or automatic removal.
+   * @returns An object with `unregister()` and `[Symbol.dispose]` for manual or
+   * automatic cleanup (e.g. `using sub = dispatcher.register(...)`).
    */
   public register<
     OperationKey extends OperationType,
     Handler extends (...params: ParamsTupleMap[OperationKey]) => boolean | void,
   >(operation: OperationKey, handler: Handler) {
-    const handlerList = this.handlerMap.get(operation) || [handler];
+    let handlerList = this.handlerMap.get(operation);
 
-    if (!this.handlerMap.has(operation)) {
+    if (!handlerList) {
+      handlerList = [];
       this.handlerMap.set(operation, handlerList);
-    } else {
-      handlerList.unshift(handler);
     }
 
-    /**
-     * Unregisters the handler from the list of listeners for the given operation.
-     * If the handler was previously registered, it will be removed from the handler list.
-     *
-     * @returns void
-     */
+    handlerList.unshift(handler);
+
     const unregister = () => {
       const index = handlerList.indexOf(handler);
 

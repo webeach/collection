@@ -1,10 +1,18 @@
 export { Collection } from './Collection';
+export { $CollectionHookDispatcherSymbol } from './constants';
+export { HookDispatcher } from '../HookDispatcher';
 
 export type {
   CollectionBaseItemData,
   CollectionDefaultKeyType,
-  CollectionItem,
+  CollectionHookOperationAction,
+  CollectionHookOperationStage,
   CollectionHookOperationType,
+  CollectionHookParams,
+  CollectionHookParamsMap,
+  CollectionHookParamsMeta,
+  CollectionHookParamsOperationClear,
+  CollectionItem,
   CollectionOptions,
   CollectionPrimaryKeyWithDefault,
   CollectionUpdateEventHandler,
