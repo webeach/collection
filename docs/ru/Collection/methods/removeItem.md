@@ -22,10 +22,12 @@ collectionInstance.removeItem(key): boolean;
 
 1. Ищется элемент по указанному первичному ключу.
 2. Если элемент найден:
-  - Вызывается хук `remove:before`.
-  - Элемент удаляется из коллекции и внутреннего индекса.
-  - Вызывается хук `remove:after`.
-  - Вызывается событие `update`.
+
+- Вызывается хук `remove:before`.
+- Элемент удаляется из коллекции и внутреннего индекса.
+- Вызывается хук `remove:after`.
+- Вызывается событие `update`.
+
 3. Если элемент не найден, метод возвращает `false` без вызова хуков и событий.
 
 ---
@@ -55,9 +57,7 @@ console.log(Array.from(collection));
 
 ```ts
 const collection = new Collection({
-  initialItems: [
-    { key: 'user1', name: 'John Doe' },
-  ],
+  initialItems: [{ key: 'user1', name: 'John Doe' }],
 });
 
 const removed = collection.removeItem('user2');

@@ -1,108 +1,113 @@
 {
   "name": "@webeach/collection",
   "version": "1.1.0",
-  "author": {
-    "name": "Ruslan Martynov",
-    "email": "github@webea.ch"
-  },
   "description": "Managed collection of items with hooks, events, and strict type safety",
   "keywords": [
     "collection",
-    "typed-collection",
-    "list",
-    "typed-list",
     "dataset",
-    "typescript",
     "event-driven",
     "evented",
     "hookable",
     "library",
+    "list",
+    "typed-collection",
+    "typed-list",
+    "typescript",
     "webeach"
   ],
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/webeach/collection"
-  },
+  "homepage": "https://github.com/webeach/collection",
   "bugs": {
     "url": "https://github.com/webeach/collection/issues"
   },
-  "homepage": "https://github.com/webeach/collection#readme",
+  "license": "MIT",
+  "author": {
+    "name": "Ruslan Martynov",
+    "email": "github@webea.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webeach/collection"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "type": "module",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.js",
+  "browser": "./dist/browser/index.js",
+  "types": "./dist/cjs/index.d.cts",
+  "unpkg": "./dist/browser/index.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.cts",
+        "default": "./dist/cjs/index.cjs"
+      }
+    }
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
-  "engines": {
-    "node": "22.19.0"
-  },
-  "type": "module",
-  "main": "./lib/cjs/index.cjs",
-  "module": "./lib/esm/index.js",
-  "types": "./lib/cjs/index.d.cts",
-  "browser": "./lib/browser/index.js",
-  "unpkg": "./lib/browser/index.js",
-  "exports": {
-    ".": {
-      "types": "./lib/cjs/index.d.cts",
-      "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.cjs"
-    }
-  },
-  "files": [
-    "docs",
-    "lib",
-    "LICENSE",
-    "README.md"
-  ],
   "scripts": {
     "build": "tsup",
-    "build:watch": "tsup --watch",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
-    "lint:types": "tsc --noEmit",
+    "dev": "tsup --watch",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest watch",
+    "test:watch": "vitest",
     "size": "size-limit",
     "release": "semantic-release",
     "prepare": "is-ci || husky"
   },
+  "devDependencies": {
+    "@commitlint/cli": "^21.0.1",
+    "@commitlint/config-conventional": "^21.0.1",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^12.0.8",
+    "@semantic-release/npm": "^13.1.5",
+    "@semantic-release/release-notes-generator": "^14.1.1",
+    "@size-limit/file": "^12.1.0",
+    "@types/node": "^22.10.0",
+    "husky": "^9.1.7",
+    "is-ci": "^4.1.0",
+    "lint-staged": "^17.0.5",
+    "oxfmt": "^0.51.0",
+    "oxlint": "^1.66.0",
+    "semantic-release": "^25.0.3",
+    "size-limit": "^12.1.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.2",
+    "vitest": "^4.1.7"
+  },
   "lint-staged": {
-    "**/*.{cjs,js,jsx,mjs,mts,ts,tsx}": [
-      "pnpm run lint"
+    "**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}": [
+      "oxlint --fix",
+      "oxfmt"
+    ],
+    "**/*.json": [
+      "oxfmt"
     ]
   },
   "size-limit": [
     {
-      "path": "./lib/browser/index.js",
+      "path": "./dist/browser/index.js",
       "limit": "1.5 KB"
     }
   ],
-  "devDependencies": {
-    "@commitlint/cli": "^20.0.0",
-    "@commitlint/config-conventional": "^20.0.0",
-    "@eslint/js": "^9.12.0",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/commit-analyzer": "^13.0.0",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^12.0.0",
-    "@semantic-release/npm": "^13.0.0",
-    "@semantic-release/release-notes-generator": "^14.0.1",
-    "@size-limit/file": "^12.0.0",
-    "@types/node": "^24.0.0",
-    "eslint": "^9.12.0",
-    "eslint-config-prettier": "^10.0.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "globals": "^17.0.0",
-    "husky": "^9.1.6",
-    "is-ci": "^4.0.0",
-    "lint-staged": "^16.0.0",
-    "prettier": "^3.3.3",
-    "semantic-release": "^25.0.0",
-    "size-limit": "^12.0.0",
-    "tsup": "^8.4.0",
-    "typescript": "^5.6.3",
-    "typescript-eslint": "^8.10.0",
-    "vitest": "^4.0.0"
-  }
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": "^10"
+  },
+  "packageManager": "pnpm@10.7.1"
 }

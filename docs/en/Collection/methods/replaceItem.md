@@ -24,9 +24,11 @@ collectionInstance.replaceItem(key, item): boolean;
 1. The validity of the new item is checked.
 2. The existing item is searched by the provided key.
 3. If the item is found:
-  - The `remove:before` hook is called.
-  - The old item is removed.
-  - The `remove:after` hook is called.
+
+- The `remove:before` hook is called.
+- The old item is removed.
+- The `remove:after` hook is called.
+
 4. The `insert:before` hook is called.
 5. The new item is inserted in place of the old one.
 6. The `insert:after` hook is called.

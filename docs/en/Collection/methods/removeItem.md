@@ -22,10 +22,12 @@ collectionInstance.removeItem(key): boolean;
 
 1. The item is searched by the provided primary key.
 2. If the item is found:
-  - The `remove:before` hook is called.
-  - The item is removed from the collection and the internal index.
-  - The `remove:after` hook is called.
-  - The `update` event is triggered.
+
+- The `remove:before` hook is called.
+- The item is removed from the collection and the internal index.
+- The `remove:after` hook is called.
+- The `update` event is triggered.
+
 3. If the item is not found, the method returns `false` without calling any hooks or events.
 
 ---
@@ -55,9 +57,7 @@ console.log(Array.from(collection));
 
 ```ts
 const collection = new Collection({
-  initialItems: [
-    { key: 'user1', name: 'John Doe' },
-  ],
+  initialItems: [{ key: 'user1', name: 'John Doe' }],
 });
 
 const removed = collection.removeItem('user2');

@@ -6,6 +6,7 @@
 Возвращает булево значение: `true`, если элемент существует, и `false`, если нет.
 
 > ℹ️ **Особенности:**
+>
 > - Проверка осуществляется через внутренний `Map`, что обеспечивает очень быструю (O(1)) проверку.
 
 ---
@@ -49,9 +50,7 @@ console.log(collection.hasItem('user1')); // true
 
 ```ts
 const collection = new Collection({
-  initialItems: [
-    { key: 'user1', name: 'John Doe' },
-  ],
+  initialItems: [{ key: 'user1', name: 'John Doe' }],
 });
 
 console.log(collection.hasItem('nonexistent')); // false

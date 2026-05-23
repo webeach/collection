@@ -6,6 +6,7 @@ The `getItem` method allows you to retrieve an item from the collection by its p
 If an item with the specified key exists, its object is returned. If the item does not exist, `null` is returned.
 
 > ℹ️ **Details:**
+>
 > - Item lookup is performed via the internal `Map`, ensuring fast (O(1)) access speed.
 
 ---
@@ -53,9 +54,7 @@ console.log(user);
 
 ```ts
 const collection = new Collection({
-  initialItems: [
-    { key: 'user1', name: 'John Doe' },
-  ],
+  initialItems: [{ key: 'user1', name: 'John Doe' }],
 });
 
 const user = collection.getItem('nonexistent');

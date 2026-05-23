@@ -127,10 +127,8 @@ export type CollectionItem<
 export type CollectionOptions<
   PrimaryKey extends string = 'key',
   PrimaryKeyType = CollectionDefaultKeyType,
-  ItemData extends CollectionBaseItemData<
-    PrimaryKey,
-    PrimaryKeyType
-  > = CollectionBaseItemData<PrimaryKey, PrimaryKeyType>,
+  ItemData extends CollectionBaseItemData<PrimaryKey, PrimaryKeyType> =
+    CollectionBaseItemData<PrimaryKey, PrimaryKeyType>,
 > = {
   /** Initial list of items in the collection. */
   initialItems?: ReadonlyArray<
@@ -158,10 +156,8 @@ export type CollectionPrimaryKeyWithDefault<PrimaryKey extends string> =
 export type CollectionUpdateEventHandler<
   PrimaryKey extends string = 'key',
   PrimaryKeyType = CollectionDefaultKeyType,
-  ItemData extends CollectionBaseItemData<
-    PrimaryKey,
-    PrimaryKeyType
-  > = CollectionBaseItemData<PrimaryKey, PrimaryKeyType>,
+  ItemData extends CollectionBaseItemData<PrimaryKey, PrimaryKeyType> =
+    CollectionBaseItemData<PrimaryKey, PrimaryKeyType>,
 > = (
   event: CollectionUpdateEvent<PrimaryKey, PrimaryKeyType, ItemData>,
 ) => void;

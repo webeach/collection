@@ -7,6 +7,7 @@
 После вставки будет вызвано событие обновления (`update`).
 
 > ℹ️ **Особенности:**
+>
 > - Если элемент с таким ключом существует, новый элемент вставляется перед ним.
 > - Если элемент не найден, поведение аналогично `appendItem`.
 
@@ -29,9 +30,13 @@ collectionInstance.insertItemBefore(key, item): boolean;
 1. Выполняется поиск целевого элемента по ключу.
 2. Вызывается хук `insert:before`.
 3. Если целевой элемент найден:
-  - Новый элемент вставляется в коллекцию сразу перед ним.
+
+- Новый элемент вставляется в коллекцию сразу перед ним.
+
 4. Если целевой элемент не найден:
-  - Новый элемент добавляется в конец коллекции (как `appendItem`).
+
+- Новый элемент добавляется в конец коллекции (как `appendItem`).
+
 5. Вызывается хук `insert:after`.
 6. Вызывается событие `update`.
 
@@ -65,9 +70,7 @@ console.log(Array.from(collection));
 
 ```ts
 const collection = new Collection({
-  initialItems: [
-    { key: 'user1', name: 'John Doe' },
-  ],
+  initialItems: [{ key: 'user1', name: 'John Doe' }],
 });
 
 collection.insertItemBefore('nonexistent', { key: 'user2', name: 'Alice' });
@@ -86,9 +89,7 @@ console.log(Array.from(collection));
 ```ts
 const collection = new Collection({
   primaryKey: 'id',
-  initialItems: [
-    { id: 1, name: 'John Doe' },
-  ],
+  initialItems: [{ id: 1, name: 'John Doe' }],
 });
 
 collection.insertItemBefore(1, { id: 2, name: 'Alice' });

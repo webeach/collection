@@ -29,6 +29,6 @@ node_modules
 !.yarn/versions
 
 # Build directories and files
-/lib
+/dist
 /.rollup.cache
 *.local

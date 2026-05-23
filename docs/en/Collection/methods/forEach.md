@@ -6,6 +6,7 @@ The `forEach` method allows you to iterate over all items in the collection and 
 Items are passed to the callback in the order they appear in the collection.
 
 > ℹ️ **Details:**
+>
 > - Iteration is performed on a **copy** of the collection's items to avoid issues if the collection is modified inside the callback.
 > - The original collection remains unchanged during the iteration.
 

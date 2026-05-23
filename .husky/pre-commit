@@ -1,3 +1,2 @@
 lint-staged
-pnpm run lint:types
-pnpm run size
+pnpm run typecheck

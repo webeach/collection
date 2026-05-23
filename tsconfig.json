@@ -1,22 +1,15 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "target": "ES2022",
     "module": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "bundler",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "strict": true,
-    "allowJs": true,
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
-    "noEmit": true,
-    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "skipLibCheck": true,
-    "types": ["vitest/globals"]
+    "types": ["node", "vitest/globals"]
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
-  "exclude": ["lib"]
+  "include": ["src/**/*"]
 }

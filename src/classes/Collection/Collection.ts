@@ -1,7 +1,6 @@
 import { __DEVELOPMENT__ } from '../../constants/common';
 import { CollectionUpdateEvent } from '../CollectionUpdateEvent';
 import { HookDispatcher } from '../HookDispatcher';
-
 import { $CollectionHookDispatcherSymbol } from './constants';
 import {
   CollectionBaseItemData,
@@ -25,10 +24,8 @@ import {
 export class Collection<
   PrimaryKey extends string = 'key',
   PrimaryKeyType = CollectionDefaultKeyType,
-  ItemData extends CollectionBaseItemData<
-    PrimaryKey,
-    PrimaryKeyType
-  > = CollectionBaseItemData<PrimaryKey, PrimaryKeyType>,
+  ItemData extends CollectionBaseItemData<PrimaryKey, PrimaryKeyType> =
+    CollectionBaseItemData<PrimaryKey, PrimaryKeyType>,
 > extends EventTarget {
   /**
    * A handler that is called whenever the collection is updated.

@@ -6,6 +6,7 @@ The `hasItem` method checks whether an item exists in the collection by its prim
 It returns a boolean value: `true` if the item exists, and `false` otherwise.
 
 > ℹ️ **Details:**
+>
 > - The check is performed using the internal `Map`, ensuring very fast (O(1)) verification.
 
 ---
@@ -49,9 +50,7 @@ console.log(collection.hasItem('user1')); // true
 
 ```ts
 const collection = new Collection({
-  initialItems: [
-    { key: 'user1', name: 'John Doe' },
-  ],
+  initialItems: [{ key: 'user1', name: 'John Doe' }],
 });
 
 console.log(collection.hasItem('nonexistent')); // false

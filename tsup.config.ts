@@ -5,29 +5,29 @@ export default defineConfig([
   {
     entry: ['src/index.ts'],
     format: 'esm',
-    outDir: 'lib/esm',
+    outDir: 'dist/esm',
     target: 'es2022',
     sourcemap: true,
     minify: false,
-    dts: false,
+    dts: true,
     clean: true,
   },
   // CJS build
   {
     entry: ['src/index.ts'],
     format: 'cjs',
-    outDir: 'lib/cjs',
+    outDir: 'dist/cjs',
     target: 'es2022',
     sourcemap: true,
     minify: false,
     dts: true,
     clean: false,
   },
-  // Browser build (minified)
+  // Browser build (minified ESM for CDN / unpkg)
   {
     entry: ['src/index.ts'],
     format: 'esm',
-    outDir: 'lib/browser',
+    outDir: 'dist/browser',
     target: 'es2018',
     sourcemap: true,
     minify: true,

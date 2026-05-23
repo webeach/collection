@@ -23,7 +23,9 @@ collectionInstance.clear(): boolean;
 
 1. If the collection is already empty, the method returns `false` and does nothing.
 2. Before removing all items, the `clear:before` hook is called.
-  - If the hook cancels the operation, clearing is aborted, and the method returns `false`.
+
+- If the hook cancels the operation, clearing is aborted, and the method returns `false`.
+
 3. All items and internal indexes are cleared.
 4. After clearing, the `clear:after` hook is called.
 5. The `update` event is triggered.
