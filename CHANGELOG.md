@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/webeach/collection/compare/v1.1.0...v1.2.0) (2026-05-23)
+
+
+### Features
+
+* silent eviction on insert, setItems returns count, hook dispatcher refactor ([162fc80](https://github.com/webeach/collection/commit/162fc80965b55f6c2b0721a84fb2a08d41693321))
+
 # [1.1.0](https://github.com/webeach/collection/compare/v1.0.2...v1.1.0) (2025-08-10)
 
 
