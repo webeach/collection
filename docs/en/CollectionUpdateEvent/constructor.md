@@ -1,46 +1,46 @@
 # `constructor`
 
-## Описание
+## Description
 
-Конструктор `CollectionUpdateEvent` создаёт новое событие обновления коллекции с типом `'update'`.  
-Событие содержит актуальный список элементов коллекции после изменений.
+The `CollectionUpdateEvent` constructor creates a new collection update event with type `'update'`.  
+The event carries the current list of collection items after the change.
 
-> 📚 **Важно:** Это специализированное событие для внутреннего использования в коллекциях. Оно позволяет отслеживать изменения без необходимости вручную управлять состоянием.
+> 📚 **Important:** This is a specialized event used internally by collections. It lets you observe changes without manually tracking state.
 
 ---
 
-## Синтаксис
+## Syntax
 
 ```ts
 const event = new CollectionUpdateEvent(items);
 ```
 
-- **`items`** — новый массив элементов коллекции.
-- **Возвращает** — экземпляр `CollectionUpdateEvent`.
+- **`items`** — a new array of collection items.
+- **Returns** — an instance of `CollectionUpdateEvent`.
 
 ---
 
-## Поведение
+## Behavior
 
-1. Создаёт кастомное событие типа `'update'`.
-2. Сохраняет элементы в поле `detail`.
-3. Поддерживает механизм `stopImmediatePropagation()` для контроля распространения события.
+1. Creates a custom event with type `'update'`.
+2. Stores the passed items array in the `detail` field **as-is** — no copy is made. The collection passes its frozen snapshot here, which is why `event.detail === collection.items` holds inside any listener.
+3. Supports `stopImmediatePropagation()` to control event propagation. When called inside `onUpdate`, the collection also skips the subsequent `dispatchEvent` to ordinary `addEventListener('update', ...)` listeners.
 
 ---
 
-## Типизация
+## Typing
 
-Конструктор поддерживает generics для уточнения структуры элементов:
+The constructor supports generics for narrowing the item shape:
 
 ```ts
 CollectionUpdateEvent<PrimaryKey extends string, PrimaryKeyType extends string | number | bigint, ItemData extends object>
 ```
 
-- **`PrimaryKey`** — название поля первичного ключа (по умолчанию `'key'`).
-- **`PrimaryKeyType`** — тип значения ключа (`string`, `number` или `bigint`).
-- **`ItemData`** — структура объекта элемента.
+- **`PrimaryKey`** — name of the primary key field (defaults to `'key'`).
+- **`PrimaryKeyType`** — type of the key value (`string`, `number`, or `bigint`).
+- **`ItemData`** — shape of the item object.
 
-### Пример типизации
+### Typed example
 
 ```ts
 const event = new CollectionUpdateEvent<

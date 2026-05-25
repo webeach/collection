@@ -76,19 +76,26 @@ export class Collection<
     >
   >();
 
+  /**
+   * Internal mutable array of items in insertion order. All mutating
+   * methods (`_appendItem`, `_clear`, etc.) operate on this array directly.
+   *
+   * Never expose this reference to the outside world — use the public
+   * {@link items} getter (which returns the frozen {@link itemsSnapshot})
+   * instead.
+   */
+  protected readonly currentItems: CollectionItem<
+    CollectionPrimaryKeyWithDefault<PrimaryKey>,
+    PrimaryKeyType,
+    ItemData
+  >[] = [];
+
   /** Initial items captured from options; used by {@link reset}. */
   protected readonly initialItems: CollectionItem<
     CollectionPrimaryKeyWithDefault<PrimaryKey>,
     PrimaryKeyType,
     ItemData
   >[];
-
-  /** Current items in insertion order. */
-  protected readonly items: CollectionItem<
-    CollectionPrimaryKeyWithDefault<PrimaryKey>,
-    PrimaryKeyType,
-    ItemData
-  >[] = [];
 
   /** Primary-key index for O(1) lookups. */
   protected readonly itemsByMap = new Map<
@@ -107,6 +114,24 @@ export class Collection<
   private readonly hookMeta: CollectionHookParamsMeta<
     CollectionPrimaryKeyWithDefault<PrimaryKey>
   >;
+
+  /**
+   * Frozen, public-facing snapshot of {@link currentItems}. Re-created by
+   * {@link _updateItemsSnapshot} once per successful mutation, right before
+   * `update` event dispatch.
+   *
+   * The reference is stable between mutations — `forEach`, `[Symbol.iterator]`,
+   * the public {@link items} getter and `CollectionUpdateEvent.detail` all
+   * share this same array. Comparing `collection.items === previous` is a
+   * cheap O(1) change check.
+   */
+  private itemsSnapshot: ReadonlyArray<
+    CollectionItem<
+      CollectionPrimaryKeyWithDefault<PrimaryKey>,
+      PrimaryKeyType,
+      ItemData
+    >
+  > = [];
 
   /**
    * @param options - Configuration:
@@ -135,6 +160,7 @@ export class Collection<
     });
 
     this._setItems(this.initialItems);
+    this._updateItemsSnapshot();
   }
 
   /**
@@ -220,16 +246,16 @@ export class Collection<
         >
       >,
       index: number,
-      currentItems: Readonly<
+      currentItems: ReadonlyArray<
         CollectionItem<
           CollectionPrimaryKeyWithDefault<PrimaryKey>,
           PrimaryKeyType,
           ItemData
         >
-      >[],
+      >,
     ) => void,
   ) {
-    this.items.slice().forEach(callback);
+    this.itemsSnapshot.forEach(callback);
   }
 
   /**
@@ -442,12 +468,30 @@ export class Collection<
   }
 
   /**
+   * Read-only snapshot of the current items.
+   *
+   * @remarks
+   * Returns a frozen array that is replaced (not mutated) after every
+   * successful mutation. The reference is stable between mutations, so
+   * `collection.items === previousItems` is a cheap O(1) change check.
+   *
+   * The same reference is exposed as `CollectionUpdateEvent.detail`, so
+   * inside an `update` listener `event.detail === collection.items` holds
+   * until the next mutation.
+   *
+   * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/properties/items.md
+   */
+  public get items() {
+    return this.itemsSnapshot;
+  }
+
+  /**
    * Current number of items.
    *
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/properties/numItems.md
    */
   public get numItems() {
-    return this.items.length;
+    return this.currentItems.length;
   }
 
   /**
@@ -456,7 +500,7 @@ export class Collection<
    * @see https://github.com/webeach/collection/blob/main/docs/en/Collection/methods/[Symbol.iterator].md
    */
   public [Symbol.iterator]() {
-    return this.items.slice()[Symbol.iterator]();
+    return this.itemsSnapshot[Symbol.iterator]();
   }
 
   /**
@@ -492,16 +536,16 @@ export class Collection<
     // Silently evict the existing item with the same key (replace semantics).
     if (this.hasItem(key)) {
       const existing = this.itemsByMap.get(key)!;
-      const existingIndex = this.items.indexOf(existing);
+      const existingIndex = this.currentItems.indexOf(existing);
 
-      this.items.splice(existingIndex, 1);
+      this.currentItems.splice(existingIndex, 1);
       this.itemsByMap.delete(key);
     }
 
     // Re-clamp after potential silent removal.
     const finalIndex = Math.min(normalizedIndex, this.numItems);
 
-    this.items.splice(finalIndex, 0, item);
+    this.currentItems.splice(finalIndex, 0, item);
     this.itemsByMap.set(key, item);
 
     this[$CollectionHookDispatcherSymbol].dispatch('insert:after', {
@@ -527,7 +571,7 @@ export class Collection<
       return false;
     }
 
-    this.items.splice(0, this.numItems);
+    this.currentItems.splice(0, this.numItems);
     this.itemsByMap.clear();
 
     this[$CollectionHookDispatcherSymbol].dispatch('clear:after', {
@@ -539,11 +583,13 @@ export class Collection<
 
   /** Dispatches the `update` event to `onUpdate` and registered listeners. */
   protected _dispatchUpdate() {
+    this._updateItemsSnapshot();
+
     const updateEvent = new CollectionUpdateEvent<
       CollectionPrimaryKeyWithDefault<PrimaryKey>,
       PrimaryKeyType,
       ItemData
-    >(this.items.slice());
+    >(this.itemsSnapshot);
 
     this.onUpdate?.(updateEvent);
 
@@ -570,7 +616,7 @@ export class Collection<
     const targetItemIndex =
       targetItem === null
         ? this.numItems
-        : this.items.indexOf(targetItem) + Number(isAfter);
+        : this.currentItems.indexOf(targetItem) + Number(isAfter);
 
     return this._appendItem(item, targetItemIndex);
   }
@@ -588,7 +634,7 @@ export class Collection<
       return false;
     }
 
-    const targetItemIndex = this.items.indexOf(targetItem);
+    const targetItemIndex = this.currentItems.indexOf(targetItem);
 
     if (
       !this[$CollectionHookDispatcherSymbol].dispatch('patch:before', {
@@ -627,7 +673,7 @@ export class Collection<
       return false;
     }
 
-    const targetItemIndex = this.items.indexOf(targetItem);
+    const targetItemIndex = this.currentItems.indexOf(targetItem);
 
     if (
       !this[$CollectionHookDispatcherSymbol].dispatch('remove:before', {
@@ -639,7 +685,7 @@ export class Collection<
       return false;
     }
 
-    this.items.splice(targetItemIndex, 1);
+    this.currentItems.splice(targetItemIndex, 1);
     this.itemsByMap.delete(key);
 
     this[$CollectionHookDispatcherSymbol].dispatch('remove:after', {
@@ -669,11 +715,13 @@ export class Collection<
 
     const targetItem = this.getItem(key);
     const targetItemIndex =
-      targetItem === null ? this.numItems : this.items.indexOf(targetItem);
+      targetItem === null
+        ? this.numItems
+        : this.currentItems.indexOf(targetItem);
 
     // Silently evict the target item (no remove hooks).
     if (targetItem !== null) {
-      this.items.splice(targetItemIndex, 1);
+      this.currentItems.splice(targetItemIndex, 1);
       this.itemsByMap.delete(key);
     }
 
@@ -714,6 +762,16 @@ export class Collection<
     }
 
     return insertedCount;
+  }
+
+  /**
+   * Replaces {@link itemsSnapshot} with a fresh frozen copy of
+   * {@link currentItems}. Called once per successful mutation from
+   * {@link _dispatchUpdate} (and once from the constructor after the
+   * initial `_setItems`).
+   */
+  protected _updateItemsSnapshot() {
+    this.itemsSnapshot = Object.freeze(this.currentItems.slice());
   }
 
   /** Validates that `item` carries the primary-key field. */

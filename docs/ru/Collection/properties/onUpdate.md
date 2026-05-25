@@ -18,6 +18,8 @@ collection.onUpdate = (event) => {
 
 - **event** — экземпляр `CollectionUpdateEvent`, содержащий актуальный список элементов в коллекции в момент события.
 
+> 📚 **Важно:** `event.detail` — это та же самая замороженная ссылка, что и [`collection.items`](./items.md). Внутри обработчика выполняется равенство `event.detail === collection.items`.
+
 ---
 
 ## Поведение

@@ -18,6 +18,8 @@ collection.onUpdate = (event) => {
 
 - **event** — an instance of `CollectionUpdateEvent`, containing the current list of items at the moment of the update.
 
+> 📚 **Important:** `event.detail` is the same frozen reference as [`collection.items`](./items.md). Inside the handler, `event.detail === collection.items` holds.
+
 ---
 
 ## Behavior

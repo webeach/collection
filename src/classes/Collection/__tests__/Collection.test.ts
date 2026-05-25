@@ -2960,3 +2960,345 @@ describe('Collection hooks - reset and setItems operations', () => {
     expect(collection.getItem('new')).not.toBeNull();
   });
 });
+
+describe('Collection - items snapshot behavior', () => {
+  it('items returns a frozen array right after construction', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >({
+      initialItems: [
+        { key: 'a', value: 1 },
+        { key: 'b', value: 2 },
+      ],
+    });
+
+    const snapshot = collection.items;
+
+    expect(Object.isFrozen(snapshot)).toBe(true);
+    expect(snapshot).toEqual([
+      { key: 'a', value: 1 },
+      { key: 'b', value: 2 },
+    ]);
+  });
+
+  it('items returns a frozen empty array for an empty collection', () => {
+    const collection = new Collection();
+
+    expect(Object.isFrozen(collection.items)).toBe(true);
+    expect(collection.items).toEqual([]);
+  });
+
+  it('items reference is stable between mutations', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >({ initialItems: [{ key: 'a', value: 1 }] });
+
+    const a = collection.items;
+    const b = collection.items;
+    const c = collection.items;
+
+    expect(a).toBe(b);
+    expect(b).toBe(c);
+  });
+
+  it('items reference changes after appendItem', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >({ initialItems: [{ key: 'a', value: 1 }] });
+
+    const before = collection.items;
+    collection.appendItem({ key: 'b', value: 2 });
+    const after = collection.items;
+
+    expect(before).not.toBe(after);
+    expect(after).toEqual([
+      { key: 'a', value: 1 },
+      { key: 'b', value: 2 },
+    ]);
+  });
+
+  it('items reference changes after removeItem', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >({
+      initialItems: [
+        { key: 'a', value: 1 },
+        { key: 'b', value: 2 },
+      ],
+    });
+
+    const before = collection.items;
+    collection.removeItem('a');
+    const after = collection.items;
+
+    expect(before).not.toBe(after);
+    expect(after).toEqual([{ key: 'b', value: 2 }]);
+  });
+
+  it('items reference changes after patchItem', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >({ initialItems: [{ key: 'a', value: 1 }] });
+
+    const before = collection.items;
+    collection.patchItem('a', { value: 99 });
+    const after = collection.items;
+
+    expect(before).not.toBe(after);
+    expect(after[0]?.value).toBe(99);
+  });
+
+  it('items reference changes after clear', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >({ initialItems: [{ key: 'a', value: 1 }] });
+
+    const before = collection.items;
+    collection.clear();
+    const after = collection.items;
+
+    expect(before).not.toBe(after);
+    expect(after).toEqual([]);
+  });
+
+  it('items reference does NOT change when a clear:before hook cancels', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >({ initialItems: [{ key: 'a', value: 1 }] });
+
+    collection[$CollectionHookDispatcherSymbol].register(
+      'clear:before',
+      () => false,
+    );
+
+    const before = collection.items;
+    const result = collection.clear();
+    const after = collection.items;
+
+    expect(result).toBe(false);
+    expect(before).toBe(after);
+  });
+
+  it('items reference does NOT change when an insert:before hook cancels', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >({ initialItems: [{ key: 'a', value: 1 }] });
+
+    collection[$CollectionHookDispatcherSymbol].register(
+      'insert:before',
+      () => false,
+    );
+
+    const before = collection.items;
+    const result = collection.appendItem({ key: 'b', value: 2 });
+    const after = collection.items;
+
+    expect(result).toBe(false);
+    expect(before).toBe(after);
+  });
+
+  it('items reference does NOT change when a remove:before hook cancels', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >({ initialItems: [{ key: 'a', value: 1 }] });
+
+    collection[$CollectionHookDispatcherSymbol].register(
+      'remove:before',
+      () => false,
+    );
+
+    const before = collection.items;
+    const result = collection.removeItem('a');
+    const after = collection.items;
+
+    expect(result).toBe(false);
+    expect(before).toBe(after);
+  });
+
+  it('event.detail is the same reference as collection.items inside onUpdate', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >();
+
+    let observed: unknown = null;
+    collection.onUpdate = (event) => {
+      observed = event.detail === collection.items;
+    };
+
+    collection.appendItem({ key: 'a', value: 1 });
+
+    expect(observed).toBe(true);
+  });
+
+  it('event.detail is the same reference as collection.items inside addEventListener', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >();
+
+    let observed: unknown = null;
+    collection.addEventListener('update', ((
+      event: CollectionUpdateEvent<
+        'key',
+        string,
+        { key: string; value: number }
+      >,
+    ) => {
+      observed = event.detail === collection.items;
+    }) as EventListener);
+
+    collection.appendItem({ key: 'a', value: 1 });
+
+    expect(observed).toBe(true);
+  });
+
+  it('event.detail is itself a frozen array', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >();
+
+    let frozen = false;
+    collection.onUpdate = (event) => {
+      frozen = Object.isFrozen(event.detail);
+    };
+
+    collection.appendItem({ key: 'a', value: 1 });
+
+    expect(frozen).toBe(true);
+  });
+
+  it('active for...of iteration is unaffected by a mutation during iteration', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >({
+      initialItems: [
+        { key: 'a', value: 1 },
+        { key: 'b', value: 2 },
+        { key: 'c', value: 3 },
+      ],
+    });
+
+    const visited: string[] = [];
+
+    for (const item of collection) {
+      visited.push(item.key);
+      // Mutate while iterating — must not affect ongoing iteration.
+      if (item.key === 'a') {
+        collection.clear();
+      }
+    }
+
+    expect(visited).toEqual(['a', 'b', 'c']);
+    expect(collection.numItems).toBe(0);
+  });
+
+  it('active forEach iteration is unaffected by a mutation during iteration', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >({
+      initialItems: [
+        { key: 'a', value: 1 },
+        { key: 'b', value: 2 },
+        { key: 'c', value: 3 },
+      ],
+    });
+
+    const visited: string[] = [];
+
+    collection.forEach((item) => {
+      visited.push(item.key);
+      if (item.key === 'a') {
+        collection.removeItem('b');
+        collection.removeItem('c');
+      }
+    });
+
+    expect(visited).toEqual(['a', 'b', 'c']);
+    expect(collection.numItems).toBe(1);
+  });
+
+  it('mutating the items snapshot throws in strict mode', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >({ initialItems: [{ key: 'a', value: 1 }] });
+
+    const snapshot = collection.items;
+
+    expect(() => {
+      (snapshot as Array<{ key: string; value: number }>).push({
+        key: 'x',
+        value: 99,
+      });
+    }).toThrow();
+
+    expect(collection.numItems).toBe(1);
+  });
+
+  it('captured event.detail from a previous update does not see later mutations', () => {
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >();
+
+    let firstDetail: ReadonlyArray<{ key: string; value: number }> = [];
+    collection.onUpdate = (event) => {
+      if (firstDetail.length === 0) {
+        firstDetail = event.detail;
+      }
+    };
+
+    collection.appendItem({ key: 'a', value: 1 });
+    const captured = firstDetail;
+
+    collection.appendItem({ key: 'b', value: 2 });
+    collection.appendItem({ key: 'c', value: 3 });
+
+    // The captured snapshot reflects only the state at the first dispatch.
+    expect(captured).toEqual([{ key: 'a', value: 1 }]);
+    expect(captured).not.toBe(collection.items);
+  });
+
+  it('items snapshot contains the same item object references as the collection', () => {
+    const item = { key: 'a', value: 1 };
+    const collection = new Collection<
+      'key',
+      string,
+      { key: string; value: number }
+    >({ initialItems: [item] });
+
+    const snapshot = collection.items;
+
+    // Items themselves are not copied — only the array is.
+    expect(snapshot[0]).toBe(collection.getItem('a'));
+  });
+});
