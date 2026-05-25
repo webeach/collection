@@ -1,3 +1,15 @@
+# [1.3.0](https://github.com/webeach/collection/compare/v1.2.0...v1.3.0) (2026-05-25)
+
+
+### Bug Fixes
+
+* emit programmer error warnings in production builds ([63434ff](https://github.com/webeach/collection/commit/63434ff3a2f4ee8299e20119253ba0d282122582))
+
+
+### Features
+
+* add public items snapshot getter ([1459521](https://github.com/webeach/collection/commit/14595210108d3f1480a19db1a22299ae8fe6a094))
+
 # [1.2.0](https://github.com/webeach/collection/compare/v1.1.0...v1.2.0) (2026-05-23)
 
 
