@@ -70,8 +70,8 @@ jobs:
       - name: Run tests
         run: pnpm test
 
-  size:
-    name: Size Limit
+  build:
+    name: Build
     needs: [lint]
     runs-on: ubuntu-latest
     steps:
@@ -93,14 +93,77 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+          if-no-files-found: error
+
+  size:
+    name: Size Limit
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
       - name: Check bundle size
         run: pnpm size
+
+  scan:
+    name: Secret Scan
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Scan dist for leaked secrets
+        run: pnpm scan
 
   publish:
     name: Publish
     if: |
       github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next')
-    needs: [commitlint, lint, test, size]
+    needs: [commitlint, lint, test, build, size, scan]
     runs-on: ubuntu-latest
     permissions:
       contents: write

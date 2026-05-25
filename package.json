@@ -64,6 +64,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "scan": "dist-guard",
     "size": "size-limit",
     "release": "semantic-release",
     "prepare": "is-ci || husky"
@@ -78,6 +79,7 @@
     "@semantic-release/npm": "^13.1.5",
     "@semantic-release/release-notes-generator": "^14.1.1",
     "@size-limit/file": "^12.1.0",
+    "@webeach/dist-guard": "^0.2.1",
     "husky": "^9.1.7",
     "is-ci": "^4.1.0",
     "lint-staged": "^17.0.5",
