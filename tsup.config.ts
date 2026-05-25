@@ -33,9 +33,5 @@ export default defineConfig([
     minify: true,
     dts: false,
     clean: false,
-    define: {
-      'process.env.NODE_ENV': '"production"',
-      process: 'undefined',
-    },
   },
 ]);

@@ -1,4 +1,3 @@
-import { __DEVELOPMENT__ } from '../../constants/common';
 import { CollectionUpdateEvent } from '../CollectionUpdateEvent';
 import { HookDispatcher } from '../HookDispatcher';
 import { $CollectionHookDispatcherSymbol } from './constants';
@@ -335,7 +334,7 @@ export class Collection<
    * Mutates the existing object reference in place via `Object.assign` — any
    * external references to the same item will observe the changes. The primary
    * key field is forcibly preserved; attempts to change it via `patchData` are
-   * silently overridden (and produce a `console.error` in development builds).
+   * silently overridden (and a `console.error` is emitted).
    *
    * @returns `true` if the item was found and patched; otherwise `false`.
    *
@@ -650,7 +649,7 @@ export class Collection<
       [this.primaryKey]: key,
     });
 
-    if (__DEVELOPMENT__ && this.primaryKey in patchData) {
+    if (this.primaryKey in patchData) {
       console.error(
         `CollectionError: primary key "${this.primaryKey}" must not be modified via patch. Key updates are not allowed.`,
       );
@@ -783,11 +782,9 @@ export class Collection<
     >,
   ) {
     if (!Object.hasOwnProperty.call(item, this.primaryKey)) {
-      if (__DEVELOPMENT__) {
-        console.error(
-          `CollectionError: missing required primary key "${this.primaryKey}" in item.`,
-        );
-      }
+      console.error(
+        `CollectionError: missing required primary key "${this.primaryKey}" in item.`,
+      );
       return false;
     }
 
